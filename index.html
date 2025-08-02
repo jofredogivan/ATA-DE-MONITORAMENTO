@@ -17,7 +17,6 @@
     <meta name="theme-color" content="#121212">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="imagem_57099f.png">
 </head>
 <body>
 
@@ -31,138 +30,194 @@
 
 <div class="page" id="conteudo" style="display: none;">
     <h1>Gerador de Ata</h1>
-    <form>
-        <section class="card">
-            <h2>Informações do Plantão</h2>
-            <div class="input-group">
-                <label for="dataPlantao">Data do Plantão</label>
-                <input id="dataPlantao" type="date" class="input-field">
-            </div>
-            <div class="input-group">
-                <label for="horario">Horário do Plantão</label>
-                <select id="horario" class="input-field">
-                    <option>07:00 às 19:00</option>
-                    <option>19:00 às 07:00</option>
-                </select>
-            </div>
-        </section>
-
-        <section class="card">
-            <h2>Plantonistas</h2>
-            <div id="plantonistas">
-                <div class="plantonista-item">
-                    <input class="nome input-field" placeholder="Nome">
-                    <input class="cargo input-field" placeholder="Cargo">
+    <form id="ataForm">
+        <div class="form-page active" id="page-1">
+            <section class="card">
+                <h2>Informações do Plantão</h2>
+                <div class="input-group">
+                    <label for="dataPlantao">Data do Plantão</label>
+                    <input id="dataPlantao" type="date" class="input-field">
                 </div>
+                <div class="input-group">
+                    <label for="horario">Horário do Plantão</label>
+                    <select id="horario" class="input-field">
+                        <option>07:00 às 19:00</option>
+                        <option>19:00 às 07:00</option>
+                    </select>
+                </div>
+            </section>
+            <section class="card">
+                <h2>Plantonistas</h2>
+                <div id="plantonistas">
+                    <div class="plantonista-item">
+                        <input class="nome input-field" placeholder="Nome">
+                        <input class="cargo input-field" placeholder="Cargo">
+                    </div>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarPlantonista()">+ Adicionar Plantonista</button>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
             </div>
-            <button type="button" class="btn secondary" onclick="adicionarPlantonista()">+ Adicionar Plantonista</button>
-        </section>
+        </div>
 
-        <section class="card">
-            <h2>Ocorrências</h2>
-            <div id="ocorrencias">
-                <textarea class="ocorrencia input-field" placeholder="Descreva a ocorrência..."></textarea>
+        <div class="form-page" id="page-2">
+            <section class="card">
+                <h2>Ocorrências</h2>
+                <div id="ocorrencias">
+                    <textarea class="ocorrencia input-field" placeholder="Descreva a ocorrência..."></textarea>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarOcorrencia()">+ Adicionar Ocorrência</button>
+            </section>
+            <section class="card">
+                <h2>Ocorrências de Portaria</h2>
+                <div id="ocorrenciasPortaria">
+                    <textarea class="portaria input-field" placeholder="Descreva a ocorrência de portaria..."></textarea>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarOcorrenciaPortaria()">+ Adicionar Ocorrência</button>
+            </section>
+            <section class="card">
+                <h2>Ordens de Serviço</h2>
+                <div id="ordens">
+                    <textarea class="ordem input-field" placeholder="Descreva a ordem de serviço..."></textarea>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarOrdem()">+ Adicionar Serviço</button>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
+                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
             </div>
-            <button type="button" class="btn secondary" onclick="adicionarOcorrencia()">+ Adicionar Ocorrência</button>
-        </section>
+        </div>
 
-        <section class="card">
-            <h2>Ocorrências de Portaria</h2>
-            <div id="ocorrenciasPortaria">
-                <textarea class="portaria input-field" placeholder="Descreva a ocorrência de portaria..."></textarea>
+        <div class="form-page" id="page-3">
+            <section class="card">
+                <h2>Envio de Viatura</h2>
+                <div id="viaturas">
+                    <div class="viatura-item">
+                        <div class="grid-2-cols">
+                            <div class="input-group"><label>Data</label><input class="viatura-data input-field" type="date"></div>
+                            <div class="input-group"><label>Hora</label><input class="viatura-hora input-field" type="time"></div>
+                            <div class="input-group"><label>Solicitante</label><input class="viatura-solicitante input-field" placeholder="Solicitante"></div>
+                            <div class="input-group"><label>Veículo</label><input class="viatura-veiculo input-field" placeholder="Veículo"></div>
+                            <div class="input-group"><label>Averiguador</label><input class="viatura-averiguador input-field" placeholder="Averiguador"></div>
+                            <div class="input-group"><label>Chegada</label><input class="viatura-chegada input-field" type="time"></div>
+                            <div class="input-group"><label>Saída</label><input class="viatura-saida input-field" type="time"></div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarViatura()">+ Adicionar Viatura</button>
+            </section>
+            <section class="card">
+                <h2>Controle de Veículos</h2>
+                <div id="veiculos">
+                    <div class="veiculo-item">
+                        <div class="grid-2-cols">
+                            <div class="input-group"><label>Data</label><input class="veiculo-data input-field" type="date"></div>
+                            <div class="input-group"><label>Saída</label><input class="veiculo-saida input-field" type="time"></div>
+                            <div class="input-group"><label>Chegada</label><input class="veiculo-chegada input-field" type="time"></div>
+                            <div class="input-group"><label>Veículo</label><input class="veiculo-nome input-field" placeholder="Veículo"></div>
+                            <div class="input-group"><label>Condutor</label><input class="veiculo-condutor input-field" placeholder="Condutor"></div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarVeiculo()">+ Adicionar Veículo</button>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
+                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
             </div>
-            <button type="button" class="btn secondary" onclick="adicionarOcorrenciaPortaria()">+ Adicionar Ocorrência</button>
-        </section>
+        </div>
 
-        <section class="card">
-            <h2>Ordens de Serviço</h2>
-            <div id="ordens">
-                <textarea class="ordem input-field" placeholder="Descreva a ordem de serviço..."></textarea>
+        <div class="form-page" id="page-4">
+            <section class="card">
+                <h2>Controle de Vídeo Alerta</h2>
+                <input type="file" id="videoAlertaImagem" accept="image/*" class="input-file">
+            </section>
+            <section class="card">
+                <h2>Controle da Paradox</h2>
+                <div class="grid-2-cols">
+                    <div class="input-group"><label>Online</label><input id="paradoxOnline" type="number" placeholder="Quantas Online" class="input-field"></div>
+                    <div class="input-group"><label>Offline</label><input id="paradoxOffline" type="number" placeholder="Quantas Offline" class="input-field"></div>
+                    <div class="input-group full-width"><label>Horário</label><input type="datetime-local" id="paradoxHorario" class="input-field"></div>
+                </div>
+            </section>
+            <section class="card">
+                <h2>Checklist</h2>
+                <ul id="checklist" class="checklist-list">
+                    <li><label><input type="checkbox" checked> 04 Ramais</label></li>
+                    <li><label><input type="checkbox" checked> 04 Controle de TV</label></li>
+                    <li><label><input type="checkbox" checked> 01 Controle de Ar</label></li>
+                    <li><label><input type="checkbox" checked> 02 Celulares com carregador</label></li>
+                    <li><label><input type="checkbox" checked> 04 Mouse</label></li>
+                    <li><label><input type="checkbox" checked> 04 Teclado</label></li>
+                    <li><label><input type="checkbox" checked> 02 Lanterna</label></li>
+                    <li><label><input type="checkbox" checked> 01 Cabo de Bateria</label></li>
+                    <li><label><input type="checkbox" checked> 06 Cartões de Abastecimento</label></li>
+                    <li><label><input type="checkbox" checked> 06 CPU</label></li>
+                    <li><label><input type="checkbox" checked> 11 Monitores</label></li>
+                    <li><label><input type="checkbox" checked> 01 Microfone</label></li>
+                    <li><label><input type="checkbox" checked> Material Emergencial</label></li>
+                    <li><label><input type="checkbox" checked> 01 Placa Central Triflex</label></li>
+                    <li><label><input type="checkbox" checked> 01 Caixa de Ferramentas</label></li>
+                </ul>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
+                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
             </div>
-            <button type="button" class="btn secondary" onclick="adicionarOrdem()">+ Adicionar Serviço</button>
-        </section>
+        </div>
 
-        <section class="card">
-            <h2>Envio de Viatura</h2>
-            <div class="grid-2-cols">
-                <div class="input-group"><label>Data</label><input class="viatura-data input-field" type="date"></div>
-                <div class="input-group"><label>Hora</label><input class="viatura-hora input-field" type="time"></div>
-                <div class="input-group"><label>Solicitante</label><input class="viatura-solicitante input-field" placeholder="Solicitante"></div>
-                <div class="input-group"><label>Veículo</label><input class="viatura-veiculo input-field" placeholder="Veículo"></div>
-                <div class="input-group"><label>Averiguador</label><input class="viatura-averiguador input-field" placeholder="Averiguador"></div>
-                <div class="input-group"><label>Chegada</label><input class="viatura-chegada input-field" type="time"></div>
-                <div class="input-group"><label>Saída</label><input class="viatura-saida input-field" type="time"></div>
+        <div class="form-page" id="page-5">
+            <section class="card">
+                <h2>Assinaturas</h2>
+                <div class="input-group">
+                    <label for="assinaturaPassa">Quem Passa o Plantão</label>
+                    <input id="assinaturaPassa" placeholder="Nome" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label for="assinaturaRecebe">Quem Recebe o Plantão</label>
+                    <input id="assinaturaRecebe" placeholder="Nome" class="input-field">
+                </div>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
             </div>
-        </section>
-
-        <section class="card">
-            <h2>Controle de Veículos</h2>
-            <div class="grid-2-cols">
-                <div class="input-group"><label>Data</label><input class="veiculo-data input-field" type="date"></div>
-                <div class="input-group"><label>Saída</label><input class="veiculo-saida input-field" type="time"></div>
-                <div class="input-group"><label>Chegada</label><input class="veiculo-chegada input-field" type="time"></div>
-                <div class="input-group"><label>Veículo</label><input class="veiculo-nome input-field" placeholder="Veículo"></div>
-                <div class="input-group"><label>Condutor</label><input class="veiculo-condutor input-field" placeholder="Condutor"></div>
+            <div class="center final-buttons">
+                <button type="button" class="btn primary" onclick="gerarPdfFormal()">Gerar PDF Formal</button>
             </div>
-        </section>
-
-        <section class="card">
-            <h2>Controle de Vídeo Alerta</h2>
-            <input type="file" id="videoAlertaImagem" accept="image/*" class="input-file">
-        </section>
-
-        <section class="card">
-            <h2>Controle da Paradox</h2>
-            <div class="grid-2-cols">
-                <div class="input-group"><label>Online</label><input id="paradoxOnline" type="number" placeholder="Quantas Online" class="input-field"></div>
-                <div class="input-group"><label>Offline</label><input id="paradoxOffline" type="number" placeholder="Quantas Offline" class="input-field"></div>
-                <div class="input-group full-width"><label>Horário</label><input type="datetime-local" id="paradoxHorario" class="input-field"></div>
-            </div>
-        </section>
-
-        <section class="card">
-            <h2>Checklist</h2>
-            <ul id="checklist" class="checklist-list">
-                <li><label><input type="checkbox" checked> 04 Ramais</label></li>
-                <li><label><input type="checkbox" checked> 04 Controle de TV</label></li>
-                <li><label><input type="checkbox" checked> 01 Controle de Ar</label></li>
-                <li><label><input type="checkbox" checked> 02 Celulares com carregador</label></li>
-                <li><label><input type="checkbox" checked> 04 Mouse</label></li>
-                <li><label><input type="checkbox" checked> 04 Teclado</label></li>
-                <li><label><input type="checkbox" checked> 02 Lanterna</label></li>
-                <li><label><input type="checkbox" checked> 01 Cabo de Bateria</label></li>
-                <li><label><input type="checkbox" checked> 06 Cartões de Abastecimento</label></li>
-                <li><label><input type="checkbox" checked> 06 CPU</label></li>
-                <li><label><input type="checkbox" checked> 11 Monitores</label></li>
-                <li><label><input type="checkbox" checked> 01 Microfone</label></li>
-                <li><label><input type="checkbox" checked> Material Emergencial</label></li>
-                <li><label><input type="checkbox" checked> 01 Placa Central Triflex</label></li>
-                <li><label><input type="checkbox" checked> 01 Caixa de Ferramentas</label></li>
-            </ul>
-        </section>
-
-        <section class="card">
-            <h2>Assinaturas</h2>
-            <div class="input-group">
-                <label for="assinaturaPassa">Quem Passa o Plantão</label>
-                <input id="assinaturaPassa" placeholder="Nome" class="input-field">
-            </div>
-            <div class="input-group">
-                <label for="assinaturaRecebe">Quem Recebe o Plantão</label>
-                <input id="assinaturaRecebe" placeholder="Nome" class="input-field">
-            </div>
-        </section>
+        </div>
     </form>
-
-    <div class="center final-buttons">
-        <button class="btn primary" onclick="gerarPdfFormal()">Gerar PDF Formal</button>
-    </div>
 </div>
 
 <script>
+    let currentPage = 1;
+
+    function showPage(pageNumber) {
+        document.querySelectorAll('.form-page').forEach(page => {
+            page.classList.remove('active');
+        });
+        document.getElementById(`page-${pageNumber}`).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextPage() {
+        if (currentPage < 5) {
+            currentPage++;
+            showPage(currentPage);
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+        }
+    }
+
     function iniciarAta() {
         document.getElementById('capa').style.display = 'none';
         document.getElementById('conteudo').style.display = 'block';
+        showPage(1);
     }
 
     function adicionarPlantonista() {
@@ -193,6 +248,38 @@
         document.getElementById('ordens').appendChild(area);
     }
     
+    function adicionarViatura() {
+        const item = document.createElement('div');
+        item.className = 'viatura-item';
+        item.innerHTML = `
+            <div class="grid-2-cols">
+                <div class="input-group"><label>Data</label><input class="viatura-data input-field" type="date"></div>
+                <div class="input-group"><label>Hora</label><input class="viatura-hora input-field" type="time"></div>
+                <div class="input-group"><label>Solicitante</label><input class="viatura-solicitante input-field" placeholder="Solicitante"></div>
+                <div class="input-group"><label>Veículo</label><input class="viatura-veiculo input-field" placeholder="Veículo"></div>
+                <div class="input-group"><label>Averiguador</label><input class="viatura-averiguador input-field" placeholder="Averiguador"></div>
+                <div class="input-group"><label>Chegada</label><input class="viatura-chegada input-field" type="time"></div>
+                <div class="input-group"><label>Saída</label><input class="viatura-saida input-field" type="time"></div>
+            </div>
+        `;
+        document.getElementById('viaturas').appendChild(item);
+    }
+
+    function adicionarVeiculo() {
+        const item = document.createElement('div');
+        item.className = 'veiculo-item';
+        item.innerHTML = `
+            <div class="grid-2-cols">
+                <div class="input-group"><label>Data</label><input class="veiculo-data input-field" type="date"></div>
+                <div class="input-group"><label>Saída</label><input class="veiculo-saida input-field" type="time"></div>
+                <div class="input-group"><label>Chegada</label><input class="veiculo-chegada input-field" type="time"></div>
+                <div class="input-group"><label>Veículo</label><input class="veiculo-nome input-field" placeholder="Veículo"></div>
+                <div class="input-group"><label>Condutor</label><input class="veiculo-condutor input-field" placeholder="Condutor"></div>
+            </div>
+        `;
+        document.getElementById('veiculos').appendChild(item);
+    }
+
     async function gerarPdfFormal() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -201,7 +288,6 @@
         const titleHeight = 8;
         const margin = 20;
 
-        const watermarkImgPath = 'imagem_57099f.png'; 
         const logoImgPath = 'assets/image_987e83.png'; 
 
         const loadImage = (path) => {
@@ -213,12 +299,9 @@
             });
         };
 
-        let watermarkImg, logoImg;
+        let logoImg;
         try {
-            [watermarkImg, logoImg] = await Promise.all([
-                loadImage(watermarkImgPath),
-                loadImage(logoImgPath)
-            ]);
+            logoImg = await loadImage(logoImgPath);
         } catch (e) {
             console.error("Falha ao gerar o PDF:", e.message);
             alert("Erro ao gerar o PDF. Verifique o console para mais detalhes.");
@@ -233,23 +316,14 @@
             doc.line(10, 20, 200, 20);
         };
 
-        const addWatermark = (doc) => {
-            doc.saveGraphicsState();
-            doc.setGState(new doc.GState({opacity: 0.1})); 
-            doc.addImage(watermarkImg, 'PNG', 50, 100, 100, 100); 
-            doc.restoreGraphicsState();
-        };
-
         const checkPageAndAddHeader = () => {
             if (y + 20 > 280) {
                 doc.addPage();
                 y = 30;
-                addWatermark(doc);
                 addHeader(doc);
             }
         };
-
-        addWatermark(doc);
+        
         addHeader(doc);
         
         const v = sel => document.querySelector(sel)?.value || "";
@@ -263,7 +337,6 @@
             if (y + requiredHeight > 280) {
                 doc.addPage();
                 y = 30;
-                addWatermark(doc);
                 addHeader(doc);
             }
 
@@ -282,14 +355,16 @@
             y += lineHeight;
         };
 
+        // --- Gerando o conteúdo do PDF a partir dos múltiplos campos ---
         let infoPlantao = `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`;
         addSection("Informações do Plantão", infoPlantao);
         checkPageAndAddHeader();
 
         let plantonistas = "";
-        document.querySelectorAll('#plantonistas .nome').forEach((el, i) => {
-            const cargo = document.querySelectorAll('#plantonistas .cargo')[i]?.value;
-            plantonistas += `• ${el.value} - ${cargo || "Sem cargo"}\n`;
+        document.querySelectorAll('#plantonistas .plantonista-item').forEach(item => {
+            const nome = item.querySelector('.nome')?.value;
+            const cargo = item.querySelector('.cargo')?.value;
+            if (nome) plantonistas += `• ${nome} - ${cargo || "Sem cargo"}\n`;
         });
         addSection("Plantonistas", plantonistas);
         checkPageAndAddHeader();
@@ -314,13 +389,35 @@
         });
         addSection("Ordens de Serviço", ordens);
         checkPageAndAddHeader();
-
-        let viatura = `Data: ${v('.viatura-data')}, Hora: ${v('.viatura-hora')}\nSolicitante: ${v('.viatura-solicitante')}\nVeículo: ${v('.viatura-veiculo')}, Averiguador: ${v('.viatura-averiguador')}\nChegada: ${v('.viatura-chegada')}, Saída: ${v('.viatura-saida')}`;
-        addSection("Envio de Viatura", viatura);
+        
+        let viaturas = "";
+        document.querySelectorAll('#viaturas .viatura-item').forEach(item => {
+            const data = item.querySelector('.viatura-data').value;
+            const hora = item.querySelector('.viatura-hora').value;
+            const solicitante = item.querySelector('.viatura-solicitante').value;
+            const veiculo = item.querySelector('.viatura-veiculo').value;
+            const averiguador = item.querySelector('.viatura-averiguador').value;
+            const chegada = item.querySelector('.viatura-chegada').value;
+            const saida = item.querySelector('.viatura-saida').value;
+            if (data || solicitante) {
+                viaturas += `Data: ${data}, Hora: ${hora}\nSolicitante: ${solicitante}\nVeículo: ${veiculo}, Averiguador: ${averiguador}\nChegada: ${chegada}, Saída: ${saida}\n\n`;
+            }
+        });
+        addSection("Envio de Viatura", viaturas);
         checkPageAndAddHeader();
 
-        let veiculo = `Data: ${v('.veiculo-data')}\nSaída: ${v('.veiculo-saida')}\nChegada: ${v('.veiculo-chegada')}\nVeículo: ${v('.veiculo-nome')}\nCondutor: ${v('.veiculo-condutor')}`;
-        addSection("Controle de Veículos", veiculo);
+        let veiculos = "";
+        document.querySelectorAll('#veiculos .veiculo-item').forEach(item => {
+            const data = item.querySelector('.veiculo-data').value;
+            const saida = item.querySelector('.veiculo-saida').value;
+            const chegada = item.querySelector('.veiculo-chegada').value;
+            const nome = item.querySelector('.veiculo-nome').value;
+            const condutor = item.querySelector('.veiculo-condutor').value;
+            if (data || nome) {
+                veiculos += `Data: ${data}\nSaída: ${saida}\nChegada: ${chegada}\nVeículo: ${nome}\nCondutor: ${condutor}\n\n`;
+            }
+        });
+        addSection("Controle de Veículos", veiculos);
         checkPageAndAddHeader();
 
         const paradoxOnline = v('#paradoxOnline');
@@ -354,7 +451,6 @@
                 if (y + requiredHeight > 280) {
                     doc.addPage();
                     y = 30;
-                    addWatermark(doc);
                     addHeader(doc);
                 }
                 
@@ -376,7 +472,6 @@
         }
     }
 
-    // Script para registrar o Service Worker (PWA)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('service-worker.js')
