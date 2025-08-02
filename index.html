@@ -289,6 +289,7 @@
         const margin = 20;
 
         const logoImgPath = 'assets/image_987e83.png'; 
+        const watermarkImgPath = 'icon.png'; // Caminho para a nova imagem da marca-d'água
 
         const loadImage = (path) => {
             return new Promise((resolve, reject) => {
@@ -299,15 +300,18 @@
             });
         };
 
-        let logoImg;
+        let logoImg, watermarkImg;
         try {
-            logoImg = await loadImage(logoImgPath);
+            [logoImg, watermarkImg] = await Promise.all([
+                loadImage(logoImgPath),
+                loadImage(watermarkImgPath)
+            ]);
         } catch (e) {
             console.error("Falha ao gerar o PDF:", e.message);
-            alert("Erro ao gerar o PDF. Verifique o console para mais detalhes.");
+            alert("Erro ao gerar o PDF. Verifique o console para mais detalhes. A imagem pode não existir ou o caminho pode estar incorreto.");
             return;
         }
-        
+
         const addHeader = (doc) => {
             doc.addImage(logoImg, 'PNG', 150, 10, 40, 10);
             doc.setFont("Helvetica", "bold");
@@ -315,15 +319,24 @@
             doc.text("Ata de Monitoramento Online", margin, 15);
             doc.line(10, 20, 200, 20);
         };
+        
+        const addWatermark = (doc) => {
+            doc.saveGraphicsState();
+            doc.setGState(new doc.GState({opacity: 0.1})); 
+            doc.addImage(watermarkImg, 'PNG', 50, 100, 100, 100); 
+            doc.restoreGraphicsState();
+        };
 
         const checkPageAndAddHeader = () => {
             if (y + 20 > 280) {
                 doc.addPage();
                 y = 30;
+                addWatermark(doc);
                 addHeader(doc);
             }
         };
         
+        addWatermark(doc);
         addHeader(doc);
         
         const v = sel => document.querySelector(sel)?.value || "";
@@ -337,6 +350,7 @@
             if (y + requiredHeight > 280) {
                 doc.addPage();
                 y = 30;
+                addWatermark(doc);
                 addHeader(doc);
             }
 
@@ -451,6 +465,7 @@
                 if (y + requiredHeight > 280) {
                     doc.addPage();
                     y = 30;
+                    addWatermark(doc);
                     addHeader(doc);
                 }
                 
