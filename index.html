@@ -145,72 +145,170 @@
     }
 
     async function gerarPdfFormal() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        let y = 30;
-        const lineHeight = 7;
-        const titleHeight = 8;
-        const margin = 20;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    let y = 30;
+    const lineHeight = 7;
+    const titleHeight = 8;
+    const margin = 20;
 
-        // Imagem da marca d'água e logo (você pode usar a mesma imagem)
-        const watermarkImgPath = 'imagem_57099f.png'; // Caminho para a imagem da marca d'água
-        const logoImgPath = 'assets/image_987e83.png'; // Caminho para a imagem da logo
-        const watermarkImg = new Image();
-        watermarkImg.src = watermarkImgPath;
+    const watermarkImgPath = 'imagem_57099f.png'; // Verifique se este caminho está correto
+    const logoImgPath = 'assets/image_987e83.png'; // Verifique se este caminho está correto
 
-        const logoImg = new Image();
-        logoImg.src = logoImgPath;
-        
-        await new Promise((resolve) => {
-            watermarkImg.onload = resolve;
-            watermarkImg.onerror = () => {
-                console.error("Erro ao carregar a imagem da marca d'água.");
-                resolve();
+    // Funções para carregar as imagens de forma assíncrona
+    const loadImage = (path) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                console.log(`Imagem carregada com sucesso: ${path}`);
+                resolve(img);
             };
-        });
-
-        await new Promise((resolve) => {
-            logoImg.onload = resolve;
-            logoImg.onerror = () => {
-                console.error("Erro ao carregar a imagem da logo.");
-                resolve();
+            img.onerror = () => {
+                console.error(`Erro ao carregar a imagem: ${path}`);
+                reject(new Error(`Erro ao carregar a imagem: ${path}`));
             };
+            img.src = path;
+        });
+    };
+
+    let watermarkImg, logoImg;
+    try {
+        [watermarkImg, logoImg] = await Promise.all([
+            loadImage(watermarkImgPath),
+            loadImage(logoImgPath)
+        ]);
+    } catch (e) {
+        console.error("Falha ao gerar o PDF. Verifique os caminhos das imagens.");
+        alert("Erro ao gerar o PDF. Verifique o console para mais detalhes.");
+        return;
+    }
+    
+    const addHeader = (doc) => {
+        doc.addImage(logoImg, 'PNG', 150, 10, 40, 10);
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("Ata de Monitoramento Online", margin, 15);
+        doc.line(10, 20, 200, 20);
+    };
+
+    const addWatermark = (doc) => {
+        doc.saveGraphicsState();
+        doc.setGState(new doc.GState({opacity: 0.1})); // Opacidade da marca d'água
+        doc.addImage(watermarkImg, 'PNG', 50, 100, 100, 100); // Posição e tamanho
+        doc.restoreGraphicsState();
+    };
+
+    const checkPageAndAddHeader = () => {
+        if (y + 20 > 280) {
+            doc.addPage();
+            y = 30;
+            addWatermark(doc);
+            addHeader(doc);
+        }
+    };
+
+    // Gera a primeira página com a marca-d'água e o cabeçalho
+    addWatermark(doc);
+    addHeader(doc);
+    
+    const v = sel => document.querySelector(sel)?.value || "";
+    const getLines = (text, width) => doc.splitTextToSize(text, width);
+
+    const addSection = (title, content) => {
+        const contentFormatted = content.trim() ? content : "N/A";
+        const lines = getLines(contentFormatted, 210 - (margin * 2));
+        const requiredHeight = titleHeight + (lines.length * lineHeight) + lineHeight;
+
+        if (y + requiredHeight > 280) {
+            doc.addPage();
+            y = 30;
+            addWatermark(doc);
+            addHeader(doc);
+        }
+
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(title, margin, y);
+        y += titleHeight;
+
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(12);
+        lines.forEach(line => {
+            doc.text(line, margin, y);
+            y += lineHeight;
         });
         
-        const addHeader = (doc) => {
-            doc.addImage(logoImg, 'PNG', 150, 10, 40, 10);
-            doc.setFont("Helvetica", "bold");
-            doc.setFontSize(10);
-            doc.text("Ata de Monitoramento Online", margin, 15);
-            doc.line(10, 20, 200, 20);
-        };
+        y += lineHeight;
+    };
 
-        const addWatermark = (doc) => {
-            doc.saveGraphicsState();
-            doc.setGState(new doc.GState({opacity: 0.1})); // Opacidade da marca d'água
-            doc.addImage(watermarkImg, 'PNG', 50, 100, 100, 100); // Posição e tamanho
-            doc.restoreGraphicsState();
-        };
+    let infoPlantao = `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`;
+    addSection("Informações do Plantão", infoPlantao);
+    checkPageAndAddHeader();
 
-        const checkPageAndAddHeader = () => {
-            if (y + 20 > 280) { // Verifica se há espaço para a próxima seção
-                doc.addPage();
-                y = 30;
-                addWatermark(doc);
-                addHeader(doc);
-            }
-        };
+    let plantonistas = "";
+    document.querySelectorAll('#plantonistas .nome').forEach((el, i) => {
+        const cargo = document.querySelectorAll('#plantonistas .cargo')[i].value;
+        plantonistas += `• ${el.value} - ${cargo || "Sem cargo"}\n`;
+    });
+    addSection("Plantonistas", plantonistas);
+    checkPageAndAddHeader();
 
-        addWatermark(doc);
-        addHeader(doc);
-        
-        const v = sel => document.querySelector(sel)?.value || "";
-        const getLines = (text, width) => doc.splitTextToSize(text, width);
+    let ocorrencias = "";
+    document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
+        if (el.value) ocorrencias += `• ${el.value}\n`;
+    });
+    addSection("Ocorrências", ocorrencias);
+    checkPageAndAddHeader();
 
-        const addSection = (title, content) => {
-            const contentFormatted = content.trim() ? content : "N/A";
-            const lines = getLines(contentFormatted, 210 - (margin * 2));
-            const requiredHeight = titleHeight + (lines.length * lineHeight) + lineHeight;
+    let portaria = "";
+    document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
+        if (el.value) portaria += `• ${el.value}\n`;
+    });
+    addSection("Ocorrências de Portaria", portaria);
+    checkPageAndAddHeader();
+
+    let ordens = "";
+    document.querySelectorAll('#ordens .ordem').forEach(el => {
+        if (el.value) ordens += `• ${el.value}\n`;
+    });
+    addSection("Ordens de Serviço", ordens);
+    checkPageAndAddHeader();
+
+    let viatura = `Data: ${v('.viatura-data')}, Hora: ${v('.viatura-hora')}\nSolicitante: ${v('.viatura-solicitante')}\nVeículo: ${v('.viatura-veiculo')}, Averiguador: ${v('.viatura-averiguador')}\nChegada: ${v('.viatura-chegada')}, Saída: ${v('.viatura-saida')}`;
+    addSection("Envio de Viatura", viatura);
+    checkPageAndAddHeader();
+
+    let veiculo = `Data: ${v('.veiculo-data')}\nSaída: ${v('.veiculo-saida')}\nChegada: ${v('.veiculo-chegada')}\nVeículo: ${v('.veiculo-nome')}\nCondutor: ${v('.veiculo-condutor')}`;
+    addSection("Controle de Veículos", veiculo);
+    checkPageAndAddHeader();
+
+    const paradoxOnline = v('#paradoxOnline');
+    const paradoxOffline = v('#paradoxOffline');
+    let paradox = `${paradoxOnline || '0'} Online, ${paradoxOffline || '0'} Offline\nHorário: ${v('#paradoxHorario')}`;
+    addSection("Controle da Paradox", paradox);
+    checkPageAndAddHeader();
+
+    let checklist = "";
+    document.querySelectorAll('#checklist li input[type="checkbox"]').forEach(checkbox => {
+        if (checkbox.checked) {
+            checklist += `• ${checkbox.parentNode.textContent.trim()}\n`;
+        }
+    });
+    addSection("Checklist", checklist);
+    checkPageAndAddHeader();
+
+    let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}\nQuem Recebe: ${v('#assinaturaRecebe')}`;
+    addSection("Assinaturas", assinaturas);
+    checkPageAndAddHeader();
+
+    const imgInput = document.getElementById("videoAlertaImagem");
+    if (imgInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            const imgData = e.target.result;
+            const imgHeight = 100;
+            const sectionTitleHeight = titleHeight + 5;
+            const requiredHeight = sectionTitleHeight + imgHeight + lineHeight;
 
             if (y + requiredHeight > 280) {
                 doc.addPage();
@@ -218,115 +316,24 @@
                 addWatermark(doc);
                 addHeader(doc);
             }
-
+            
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(14);
-            doc.text(title, margin, y);
-            y += titleHeight;
-
-            doc.setFont("Helvetica", "normal");
-            doc.setFontSize(12);
-            lines.forEach(line => {
-                doc.text(line, margin, y);
-                y += lineHeight;
-            });
+            doc.text("Controle de Vídeo Alerta", margin, y);
+            y += sectionTitleHeight;
             
-            y += lineHeight;
-        };
-
-        let infoPlantao = `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`;
-        addSection("Informações do Plantão", infoPlantao);
-        checkPageAndAddHeader();
-
-        let plantonistas = "";
-        document.querySelectorAll('#plantonistas .nome').forEach((el, i) => {
-            const cargo = document.querySelectorAll('#plantonistas .cargo')[i].value;
-            plantonistas += `• ${el.value} - ${cargo || "Sem cargo"}\n`;
-        });
-        addSection("Plantonistas", plantonistas);
-        checkPageAndAddHeader();
-
-        let ocorrencias = "";
-        document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
-            if (el.value) ocorrencias += `• ${el.value}\n`;
-        });
-        addSection("Ocorrências", ocorrencias);
-        checkPageAndAddHeader();
-
-        let portaria = "";
-        document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
-            if (el.value) portaria += `• ${el.value}\n`;
-        });
-        addSection("Ocorrências de Portaria", portaria);
-        checkPageAndAddHeader();
-
-        let ordens = "";
-        document.querySelectorAll('#ordens .ordem').forEach(el => {
-            if (el.value) ordens += `• ${el.value}\n`;
-        });
-        addSection("Ordens de Serviço", ordens);
-        checkPageAndAddHeader();
-
-        let viatura = `Data: ${v('.viatura-data')}, Hora: ${v('.viatura-hora')}\nSolicitante: ${v('.viatura-solicitante')}\nVeículo: ${v('.viatura-veiculo')}, Averiguador: ${v('.viatura-averiguador')}\nChegada: ${v('.viatura-chegada')}, Saída: ${v('.viatura-saida')}`;
-        addSection("Envio de Viatura", viatura);
-        checkPageAndAddHeader();
-
-        let veiculo = `Data: ${v('.veiculo-data')}\nSaída: ${v('.veiculo-saida')}\nChegada: ${v('.veiculo-chegada')}\nVeículo: ${v('.veiculo-nome')}\nCondutor: ${v('.veiculo-condutor')}`;
-        addSection("Controle de Veículos", veiculo);
-        checkPageAndAddHeader();
-
-        const paradoxOnline = v('#paradoxOnline');
-        const paradoxOffline = v('#paradoxOffline');
-        let paradox = `${paradoxOnline || '0'} Online, ${paradoxOffline || '0'} Offline\nHorário: ${v('#paradoxHorario')}`;
-        addSection("Controle da Paradox", paradox);
-        checkPageAndAddHeader();
-
-        let checklist = "";
-        document.querySelectorAll('#checklist li input[type="checkbox"]').forEach(checkbox => {
-            if (checkbox.checked) {
-                checklist += `• ${checkbox.parentNode.textContent.trim()}\n`;
-            }
-        });
-        addSection("Checklist", checklist);
-        checkPageAndAddHeader();
-
-        let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}\nQuem Recebe: ${v('#assinaturaRecebe')}`;
-        addSection("Assinaturas", assinaturas);
-        checkPageAndAddHeader();
-
-        const imgInput = document.getElementById("videoAlertaImagem");
-        if (imgInput.files.length > 0) {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const imgData = e.target.result;
-                const imgHeight = 100;
-                const sectionTitleHeight = titleHeight + 5;
-                const requiredHeight = sectionTitleHeight + imgHeight + lineHeight;
-
-                if (y + requiredHeight > 280) {
-                    doc.addPage();
-                    y = 30;
-                    addWatermark(doc);
-                    addHeader(doc);
-                }
-                
-                doc.setFont("Helvetica", "bold");
-                doc.setFontSize(14);
-                doc.text("Controle de Vídeo Alerta", margin, y);
-                y += sectionTitleHeight;
-                
-                doc.addImage(imgData, 'JPEG', margin, y, 170, imgHeight);
-                doc.save("ata_monitoramento_formal.pdf");
-            };
-            reader.onerror = function() {
-                console.error("Erro ao carregar a imagem do arquivo.");
-                doc.save("ata_monitoramento_formal.pdf");
-            };
-            reader.readAsDataURL(imgInput.files[0]);
-        } else {
+            doc.addImage(imgData, 'JPEG', margin, y, 170, imgHeight);
             doc.save("ata_monitoramento_formal.pdf");
-        }
+        };
+        reader.onerror = function() {
+            console.error("Erro ao carregar a imagem do arquivo de vídeo alerta.");
+            doc.save("ata_monitoramento_formal.pdf");
+        };
+        reader.readAsDataURL(imgInput.files[0]);
+    } else {
+        doc.save("ata_monitoramento_formal.pdf");
     }
+}
 
     // Código para registrar o Service Worker (PWA)
     if ('serviceWorker' in navigator) {
