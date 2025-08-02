@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ata de Monitoramento - PDF Formal</title>
+    <title>Ata de Monitoramento - PWA</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="imagem_57099f.png">
 </head>
 <body>
 
@@ -146,25 +152,56 @@
         const titleHeight = 8;
         const margin = 20;
 
+        // Imagem da marca d'água e logo (você pode usar a mesma imagem)
+        const watermarkImgPath = 'imagem_57099f.png'; // Caminho para a imagem da marca d'água
+        const logoImgPath = 'assets/image_987e83.png'; // Caminho para a imagem da logo
+        const watermarkImg = new Image();
+        watermarkImg.src = watermarkImgPath;
+
         const logoImg = new Image();
-        logoImg.src = 'assets/image_987e83.png';
+        logoImg.src = logoImgPath;
         
-        const addHeader = (doc) => {
-          doc.addImage(logoImg, 'PNG', 150, 10, 40, 10);
-          doc.setFont("Helvetica", "bold");
-          doc.setFontSize(10);
-          doc.text("Ata de Monitoramento Online", margin, 15);
-          doc.line(10, 20, 200, 20);
-        };
-        
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve) => {
+            watermarkImg.onload = resolve;
+            watermarkImg.onerror = () => {
+                console.error("Erro ao carregar a imagem da marca d'água.");
+                resolve();
+            };
+        });
+
+        await new Promise((resolve) => {
             logoImg.onload = resolve;
             logoImg.onerror = () => {
                 console.error("Erro ao carregar a imagem da logo.");
                 resolve();
             };
         });
+        
+        const addHeader = (doc) => {
+            doc.addImage(logoImg, 'PNG', 150, 10, 40, 10);
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(10);
+            doc.text("Ata de Monitoramento Online", margin, 15);
+            doc.line(10, 20, 200, 20);
+        };
 
+        const addWatermark = (doc) => {
+            doc.saveGraphicsState();
+            doc.setGState(new doc.GState({opacity: 0.1})); // Opacidade da marca d'água
+            doc.addImage(watermarkImg, 'PNG', 50, 100, 100, 100); // Posição e tamanho
+            doc.restoreGraphicsState();
+        };
+
+        const checkPageAndAddHeader = () => {
+            if (y + 20 > 280) { // Verifica se há espaço para a próxima seção
+                doc.addPage();
+                y = 30;
+                addWatermark(doc);
+                addHeader(doc);
+            }
+        };
+
+        addWatermark(doc);
         addHeader(doc);
         
         const v = sel => document.querySelector(sel)?.value || "";
@@ -178,6 +215,7 @@
             if (y + requiredHeight > 280) {
                 doc.addPage();
                 y = 30;
+                addWatermark(doc);
                 addHeader(doc);
             }
 
@@ -198,6 +236,7 @@
 
         let infoPlantao = `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`;
         addSection("Informações do Plantão", infoPlantao);
+        checkPageAndAddHeader();
 
         let plantonistas = "";
         document.querySelectorAll('#plantonistas .nome').forEach((el, i) => {
@@ -205,35 +244,42 @@
             plantonistas += `• ${el.value} - ${cargo || "Sem cargo"}\n`;
         });
         addSection("Plantonistas", plantonistas);
+        checkPageAndAddHeader();
 
         let ocorrencias = "";
         document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
             if (el.value) ocorrencias += `• ${el.value}\n`;
         });
         addSection("Ocorrências", ocorrencias);
+        checkPageAndAddHeader();
 
         let portaria = "";
         document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
             if (el.value) portaria += `• ${el.value}\n`;
         });
         addSection("Ocorrências de Portaria", portaria);
+        checkPageAndAddHeader();
 
         let ordens = "";
         document.querySelectorAll('#ordens .ordem').forEach(el => {
             if (el.value) ordens += `• ${el.value}\n`;
         });
         addSection("Ordens de Serviço", ordens);
+        checkPageAndAddHeader();
 
         let viatura = `Data: ${v('.viatura-data')}, Hora: ${v('.viatura-hora')}\nSolicitante: ${v('.viatura-solicitante')}\nVeículo: ${v('.viatura-veiculo')}, Averiguador: ${v('.viatura-averiguador')}\nChegada: ${v('.viatura-chegada')}, Saída: ${v('.viatura-saida')}`;
         addSection("Envio de Viatura", viatura);
+        checkPageAndAddHeader();
 
         let veiculo = `Data: ${v('.veiculo-data')}\nSaída: ${v('.veiculo-saida')}\nChegada: ${v('.veiculo-chegada')}\nVeículo: ${v('.veiculo-nome')}\nCondutor: ${v('.veiculo-condutor')}`;
         addSection("Controle de Veículos", veiculo);
+        checkPageAndAddHeader();
 
         const paradoxOnline = v('#paradoxOnline');
         const paradoxOffline = v('#paradoxOffline');
         let paradox = `${paradoxOnline || '0'} Online, ${paradoxOffline || '0'} Offline\nHorário: ${v('#paradoxHorario')}`;
         addSection("Controle da Paradox", paradox);
+        checkPageAndAddHeader();
 
         let checklist = "";
         document.querySelectorAll('#checklist li input[type="checkbox"]').forEach(checkbox => {
@@ -242,9 +288,11 @@
             }
         });
         addSection("Checklist", checklist);
+        checkPageAndAddHeader();
 
         let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}\nQuem Recebe: ${v('#assinaturaRecebe')}`;
         addSection("Assinaturas", assinaturas);
+        checkPageAndAddHeader();
 
         const imgInput = document.getElementById("videoAlertaImagem");
         if (imgInput.files.length > 0) {
@@ -258,6 +306,7 @@
                 if (y + requiredHeight > 280) {
                     doc.addPage();
                     y = 30;
+                    addWatermark(doc);
                     addHeader(doc);
                 }
                 
@@ -277,6 +326,19 @@
         } else {
             doc.save("ata_monitoramento_formal.pdf");
         }
+    }
+
+    // Código para registrar o Service Worker (PWA)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(reg => {
+                    console.log('Service Worker registrado com sucesso:', reg);
+                })
+                .catch(err => {
+                    console.log('Falha no registro do Service Worker:', err);
+                });
+        });
     }
 </script>
 
