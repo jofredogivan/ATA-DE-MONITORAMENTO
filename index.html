@@ -1,416 +1,117 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ata de Monitoramento - PWA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="imagem_57099f.png">
 
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@400;500&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0d47a1" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <link rel="apple-touch-icon" href="imagem_57099f.png" />
+  <script defer src="script.js"></script>
 </head>
 <body>
-  <main>
-    <section class="page capa" id="capa" aria-label="Capa da Ata de Monitoramento">
-      <img src="assets/image_987e83.png" alt="Capa da Ata" />
-      <h1 class="titulo-capa">ATA DE MONITORAMENTO</h1>
-      <div class="center">
-        <button class="btn" onclick="iniciarAta()" aria-label="Iniciar Ata">Iniciar Ata</button>
-      </div>
-    </section>
 
-    <section class="page" id="conteudo" style="display: none;" aria-label="Conteúdo da Ata de Monitoramento">
-      <h2>Informações do Plantão</h2>
-      <label for="dataPlantao">Data do Plantão</label>
-      <input id="dataPlantao" type="date" />
+  <div class="page capa" id="capa">
+    <img src="assets/image_987e83.png" alt="Capa da Ata">
+    <h1 class="titulo-capa">ATA DE MONITORAMENTO</h1>
+    <div class="center">
+      <button class="btn" onclick="iniciarAta()">Iniciar Ata</button>
+    </div>
+  </div>
 
-      <label for="horario">Horário</label>
-      <select id="horario">
-        <option>07:00 às 19:00</option>
-        <option>19:00 às 07:00</option>
-      </select>
+  <div class="page" id="conteudo" style="display: none;">
+    <h2>Informações do Plantão</h2>
+    <input id="dataPlantao" type="date">
+    <select id="horario">
+      <option>07:00 às 19:00</option>
+      <option>19:00 às 07:00</option>
+    </select>
 
-      <h2>Plantonistas</h2>
-      <div id="plantonistas" aria-live="polite">
-        <div class="form-group">
-          <input class="nome" placeholder="Nome" aria-label="Nome do plantonista" />
-          <input class="cargo" placeholder="Cargo" aria-label="Cargo do plantonista" />
-        </div>
-      </div>
-      <button class="btn" onclick="adicionarPlantonista()" aria-label="Adicionar Plantonista">
-        + Adicionar Plantonista
-      </button>
+    <h2>Plantonistas</h2>
+    <div id="plantonistas">
+      <input class="nome" placeholder="Nome">
+      <input class="cargo" placeholder="Cargo">
+    </div>
+    <button class="btn" onclick="adicionarPlantonista()">+ Adicionar Plantonista</button>
 
-      <h2>Ocorrências</h2>
-      <div id="ocorrencias" aria-live="polite">
-        <textarea class="ocorrencia" placeholder="Descreva a ocorrência..." aria-label="Descrição da ocorrência"></textarea>
-      </div>
-      <button class="btn" onclick="adicionarOcorrencia()" aria-label="Adicionar Ocorrência">+ Adicionar Ocorrência</button>
+    <h2>Ocorrências</h2>
+    <div id="ocorrencias">
+      <textarea class="ocorrencia" placeholder="Descreva a ocorrência..."></textarea>
+    </div>
+    <button class="btn" onclick="adicionarOcorrencia()">+ Adicionar Ocorrência</button>
 
-      <h2>Ocorrências de Portaria</h2>
-      <div id="ocorrenciasPortaria" aria-live="polite">
-        <textarea
-          class="portaria"
-          placeholder="Descreva a ocorrência de portaria..."
-          aria-label="Descrição da ocorrência de portaria"
-        ></textarea>
-      </div>
-      <button
-        class="btn"
-        onclick="adicionarOcorrenciaPortaria()"
-        aria-label="Adicionar Ocorrência de Portaria"
-      >
-        + Adicionar Ocorrência de Portaria
-      </button>
+    <h2>Ocorrências de Portaria</h2>
+    <div id="ocorrenciasPortaria">
+      <textarea class="portaria" placeholder="Descreva a ocorrência de portaria..."></textarea>
+    </div>
+    <button class="btn" onclick="adicionarOcorrenciaPortaria()">+ Adicionar Ocorrência de Portaria</button>
 
-      <h2>Ordens de Serviço</h2>
-      <div id="ordens" aria-live="polite">
-        <textarea class="ordem" placeholder="Descreva a ordem de serviço..." aria-label="Descrição da ordem de serviço"></textarea>
-      </div>
-      <button class="btn" onclick="adicionarOrdem()" aria-label="Adicionar Ordem de Serviço">+ Adicionar Serviço</button>
+    <h2>Ordens de Serviço</h2>
+    <div id="ordens">
+      <textarea class="ordem" placeholder="Descreva a ordem de serviço..."></textarea>
+    </div>
+    <button class="btn" onclick="adicionarOrdem()">+ Adicionar Serviço</button>
 
-      <h2>Envio de Viatura</h2>
-      <div class="form-group">
-        <label>Data</label>
-        <input class="viatura-data" type="date" aria-label="Data do envio da viatura" />
-        <label>Hora</label>
-        <input class="viatura-hora" type="time" aria-label="Hora do envio da viatura" />
-      </div>
-      <div class="form-group">
-        <input class="viatura-solicitante" placeholder="Solicitante" aria-label="Solicitante do envio da viatura" />
-        <input class="viatura-veiculo" placeholder="Veículo" aria-label="Veículo da viatura" />
-      </div>
-      <div class="form-group">
-        <input class="viatura-averiguador" placeholder="Averiguador" aria-label="Averiguador da viatura" />
-        <label>Chegada</label>
-        <input class="viatura-chegada" type="time" aria-label="Hora de chegada da viatura" />
-        <label>Saída</label>
-        <input class="viatura-saida" type="time" aria-label="Hora de saída da viatura" />
-      </div>
+    <h2>Envio de Viatura</h2>
+    <input class="viatura-data" type="date">
+    <input class="viatura-hora" type="time">
+    <input class="viatura-solicitante" placeholder="Solicitante">
+    <input class="viatura-veiculo" placeholder="Veículo">
+    <input class="viatura-averiguador" placeholder="Averiguador">
+    <input class="viatura-chegada" type="time">
+    <input class="viatura-saida" type="time">
 
-      <h2>Controle de Veículos</h2>
-      <div class="form-group">
-        <label>Data</label>
-        <input class="veiculo-data" type="date" aria-label="Data do controle de veículos" />
-        <label>Saída</label>
-        <input class="veiculo-saida" type="time" aria-label="Hora de saída do veículo" />
-      </div>
-      <div class="form-group">
-        <label>Chegada</label>
-        <input class="veiculo-chegada" type="time" aria-label="Hora de chegada do veículo" />
-        <input class="veiculo-nome" placeholder="Veículo" aria-label="Nome do veículo" />
-      </div>
-      <input class="veiculo-condutor" placeholder="Condutor" aria-label="Nome do condutor do veículo" />
+    <h2>Controle de Veículos</h2>
+    <input class="veiculo-data" type="date">
+    <input class="veiculo-saida" type="time">
+    <input class="veiculo-chegada" type="time">
+    <input class="veiculo-nome" placeholder="Veículo">
+    <input class="veiculo-condutor" placeholder="Condutor">
 
-      <h2>Controle de Vídeo Alerta</h2>
-      <input
-        type="file"
-        id="videoAlertaImagem"
-        accept="image/*"
-        aria-label="Upload de imagem do vídeo alerta"
-      />
+    <h2>Controle de Vídeo Alerta</h2>
+    <input type="file" id="videoAlertaImagem" accept="image/*">
 
-      <h2>Controle da Paradox</h2>
-      <input
-        id="paradoxOnline"
-        type="number"
-        placeholder="Quantas Online"
-        aria-label="Quantidade online no controle da paradox"
-      />
-      <input
-        id="paradoxOffline"
-        type="number"
-        placeholder="Quantas Offline"
-        aria-label="Quantidade offline no controle da paradox"
-      />
-      <input
-        type="datetime-local"
-        id="paradoxHorario"
-        aria-label="Horário do controle da paradox"
-      />
+    <h2>Controle da Paradox</h2>
+    <input id="paradoxOnline" type="number" placeholder="Quantas Online">
+    <input id="paradoxOffline" type="number" placeholder="Quantas Offline">
+    <input type="datetime-local" id="paradoxHorario">
 
-      <h2>Checklist</h2>
-      <ul id="checklist">
-        <li><input type="checkbox" checked /> 04 Ramais</li>
-        <li><input type="checkbox" checked /> 04 Controle de TV</li>
-        <li><input type="checkbox" checked /> 01 Controle de Ar</li>
-        <li><input type="checkbox" checked /> 02 Celulares com carregador</li>
-        <li><input type="checkbox" checked /> 04 Mouse</li>
-        <li><input type="checkbox" checked /> 04 Teclado</li>
-        <li><input type="checkbox" checked /> 02 Lanterna</li>
-        <li><input type="checkbox" checked /> 01 Cabo de Bateria</li>
-        <li><input type="checkbox" checked /> 06 Cartões de Abastecimento</li>
-        <li><input type="checkbox" checked /> 06 CPU</li>
-        <li><input type="checkbox" checked /> 11 Monitores</li>
-        <li><input type="checkbox" checked /> 01 Microfone</li>
-        <li><input type="checkbox" checked /> Material Emergencial</li>
-        <li><input type="checkbox" checked /> 01 Placa Central Triflex</li>
-        <li><input type="checkbox" checked /> 01 Caixa de Ferramentas</li>
-      </ul>
+    <h2>Checklist</h2>
+    <ul id="checklist">
+      <li><input type="checkbox" checked> 04 Ramais</li>
+      <li><input type="checkbox" checked> 04 Controle de TV</li>
+      <li><input type="checkbox" checked> 01 Controle de Ar</li>
+      <li><input type="checkbox" checked> 02 Celulares com carregador</li>
+      <li><input type="checkbox" checked> 04 Mouse</li>
+      <li><input type="checkbox" checked> 04 Teclado</li>
+      <li><input type="checkbox" checked> 02 Lanterna</li>
+      <li><input type="checkbox" checked> 01 Cabo de Bateria</li>
+      <li><input type="checkbox" checked> 06 Cartões de Abastecimento</li>
+      <li><input type="checkbox" checked> 06 CPU</li>
+      <li><input type="checkbox" checked> 11 Monitores</li>
+      <li><input type="checkbox" checked> 01 Microfone</li>
+      <li><input type="checkbox" checked> Material Emergencial</li>
+      <li><input type="checkbox" checked> 01 Placa Central Triflex</li>
+      <li><input type="checkbox" checked> 01 Caixa de Ferramentas</li>
+    </ul>
 
-      <h2>Assinaturas</h2>
-      <input
-        id="assinaturaPassa"
-        placeholder="Quem Passa o Plantão"
-        aria-label="Nome de quem passa o plantão"
-      />
-      <input
-        id="assinaturaRecebe"
-        placeholder="Quem Recebe o Plantão"
-        aria-label="Nome de quem recebe o plantão"
-      />
+    <h2>Assinaturas</h2>
+    <input id="assinaturaPassa" placeholder="Quem Passa o Plantão">
+    <input id="assinaturaRecebe" placeholder="Quem Recebe o Plantão">
 
-      <div class="center">
-        <button class="btn" onclick="gerarPdfFormal()" aria-label="Gerar PDF Formal">
-          Gerar PDF Formal
-        </button>
-      </div>
-    </section>
-  </main>
+    <div class="center">
+      <button class="btn" onclick="gerarPdfFormal()">Gerar PDF Formal</button>
+    </div>
+  </div>
 
-  <script>
-    function iniciarAta() {
-      document.getElementById('capa').style.display = 'none';
-      document.getElementById('conteudo').style.display = 'block';
-    }
-
-    function adicionarPlantonista() {
-      const div = document.createElement('div');
-      div.classList.add('form-group');
-      div.innerHTML =
-        '<input class="nome" placeholder="Nome" aria-label="Nome do plantonista" /> <input class="cargo" placeholder="Cargo" aria-label="Cargo do plantonista" />';
-      document.getElementById('plantonistas').appendChild(div);
-    }
-
-    function adicionarOcorrencia() {
-      const area = document.createElement('textarea');
-      area.className = 'ocorrencia';
-      area.placeholder = 'Descreva a ocorrência...';
-      area.setAttribute('aria-label', 'Descrição da ocorrência');
-      document.getElementById('ocorrencias').appendChild(area);
-    }
-
-    function adicionarOcorrenciaPortaria() {
-      const area = document.createElement('textarea');
-      area.className = 'portaria';
-      area.placeholder = 'Descreva a ocorrência de portaria...';
-      area.setAttribute('aria-label', 'Descrição da ocorrência de portaria');
-      document.getElementById('ocorrenciasPortaria').appendChild(area);
-    }
-
-    function adicionarOrdem() {
-      const area = document.createElement('textarea');
-      area.className = 'ordem';
-      area.placeholder = 'Descreva a ordem de serviço...';
-      area.setAttribute('aria-label', 'Descrição da ordem de serviço');
-      document.getElementById('ordens').appendChild(area);
-    }
-
-    async function gerarPdfFormal() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      let y = 30;
-      const lineHeight = 7;
-      const titleHeight = 8;
-      const margin = 20;
-
-      const watermarkImgPath = 'imagem_57099f.png';
-      const logoImgPath = 'assets/image_987e83.png';
-
-      const loadImage = (path) =>
-        new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve(img);
-          img.onerror = () => reject(new Error(`Erro ao carregar a imagem: ${path}`));
-          img.src = path;
-        });
-
-      let watermarkImg, logoImg;
-      try {
-        [watermarkImg, logoImg] = await Promise.all([loadImage(watermarkImgPath), loadImage(logoImgPath)]);
-      } catch (e) {
-        alert('Erro ao gerar o PDF. Verifique o console para mais detalhes.');
-        console.error(e);
-        return;
-      }
-
-      const addHeader = (doc) => {
-        doc.addImage(logoImg, 'PNG', 150, 10, 40, 10);
-        doc.setFont('Helvetica', 'bold');
-        doc.setFontSize(10);
-        doc.text('Ata de Monitoramento Online', margin, 15);
-        doc.line(10, 20, 200, 20);
-      };
-
-      const addWatermark = (doc) => {
-        doc.saveGraphicsState();
-        doc.setGState(new doc.GState({ opacity: 0.1 }));
-        doc.addImage(watermarkImg, 'PNG', 50, 100, 100, 100);
-        doc.restoreGraphicsState();
-      };
-
-      const checkPageAndAddHeader = () => {
-        if (y + 20 > 280) {
-          doc.addPage();
-          y = 30;
-          addWatermark(doc);
-          addHeader(doc);
-        }
-      };
-
-      addWatermark(doc);
-      addHeader(doc);
-
-      const v = (sel) => document.querySelector(sel)?.value || '';
-      const getLines = (text, width) => doc.splitTextToSize(text, width);
-
-      const addSection = (title, content) => {
-        const contentFormatted = content.trim() ? content : 'N/A';
-        const lines = getLines(contentFormatted, 210 - margin * 2);
-        const requiredHeight = titleHeight + lines.length * lineHeight + lineHeight;
-
-        if (y + requiredHeight > 280) {
-          doc.addPage();
-          y = 30;
-          addWatermark(doc);
-          addHeader(doc);
-        }
-
-        doc.setFont('Helvetica', 'bold');
-        doc.setFontSize(14);
-        doc.text(title, margin, y);
-        y += titleHeight;
-
-        doc.setFont('Helvetica', 'normal');
-        doc.setFontSize(12);
-        lines.forEach((line) => {
-          doc.text(line, margin, y);
-          y += lineHeight;
-        });
-
-        y += lineHeight;
-      };
-
-      let infoPlantao = `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`;
-      addSection('Informações do Plantão', infoPlantao);
-      checkPageAndAddHeader();
-
-      let plantonistas = '';
-      document.querySelectorAll('#plantonistas .nome').forEach((el, i) => {
-        const cargo = document.querySelectorAll('#plantonistas .cargo')[i].value;
-        plantonistas += `• ${el.value || 'Sem nome'} - ${cargo || 'Sem cargo'}\n`;
-      });
-      addSection('Plantonistas', plantonistas);
-      checkPageAndAddHeader();
-
-      let ocorrencias = '';
-      document.querySelectorAll('#ocorrencias .ocorrencia').forEach((el) => {
-        if (el.value) ocorrencias += `• ${el.value}\n`;
-      });
-      addSection('Ocorrências', ocorrencias);
-      checkPageAndAddHeader();
-
-      let portaria = '';
-      document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach((el) => {
-        if (el.value) portaria += `• ${el.value}\n`;
-      });
-      addSection('Ocorrências de Portaria', portaria);
-      checkPageAndAddHeader();
-
-      let ordens = '';
-      document.querySelectorAll('#ordens .ordem').forEach((el) => {
-        if (el.value) ordens += `• ${el.value}\n`;
-      });
-      addSection('Ordens de Serviço', ordens);
-      checkPageAndAddHeader();
-
-      let viatura = `Data: ${v('.viatura-data')}, Hora: ${v('.viatura-hora')}
-Solicitante: ${v('.viatura-solicitante')}
-Veículo: ${v('.viatura-veiculo')}, Averiguador: ${v('.viatura-averiguador')}
-Chegada: ${v('.viatura-chegada')}, Saída: ${v('.viatura-saida')}`;
-      addSection('Envio de Viatura', viatura);
-      checkPageAndAddHeader();
-
-      let veiculo = `Data: ${v('.veiculo-data')}
-Saída: ${v('.veiculo-saida')}
-Chegada: ${v('.veiculo-chegada')}
-Veículo: ${v('.veiculo-nome')}
-Condutor: ${v('.veiculo-condutor')}`;
-      addSection('Controle de Veículos', veiculo);
-      checkPageAndAddHeader();
-
-      const paradoxOnline = v('#paradoxOnline');
-      const paradoxOffline = v('#paradoxOffline');
-      let paradox = `${paradoxOnline || '0'} Online, ${paradoxOffline || '0'} Offline
-Horário: ${v('#paradoxHorario')}`;
-      addSection('Controle da Paradox', paradox);
-      checkPageAndAddHeader();
-
-      let checklist = '';
-      document.querySelectorAll('#checklist li input[type="checkbox"]').forEach((checkbox) => {
-        if (checkbox.checked) {
-          checklist += `• ${checkbox.parentNode.textContent.trim()}\n`;
-        }
-      });
-      checkPageAndAddHeader();
-      addSection('Checklist', checklist);
-
-      let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}
-Quem Recebe: ${v('#assinaturaRecebe')}`;
-      checkPageAndAddHeader();
-      addSection('Assinaturas', assinaturas);
-
-      const imgInput = document.getElementById('videoAlertaImagem');
-      if (imgInput.files.length > 0) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const imgData = e.target.result;
-          const imgHeight = 100;
-          const sectionTitleHeight = titleHeight + 5;
-          const requiredHeight = sectionTitleHeight + imgHeight + lineHeight;
-
-          if (y + requiredHeight > 280) {
-            doc.addPage();
-            y = 30;
-            addWatermark(doc);
-            addHeader(doc);
-          }
-
-          doc.setFont('Helvetica', 'bold');
-          doc.setFontSize(14);
-          doc.text('Controle de Vídeo Alerta', margin, y);
-          y += sectionTitleHeight;
-
-          doc.addImage(imgData, 'JPEG', margin, y, 170, imgHeight);
-          doc.save('ata_monitoramento_formal.pdf');
-        };
-        reader.onerror = function () {
-          console.error('Erro ao carregar a imagem do arquivo de vídeo alerta.');
-          doc.save('ata_monitoramento_formal.pdf');
-        };
-        reader.readAsDataURL(imgInput.files[0]);
-      } else {
-        doc.save('ata_monitoramento_formal.pdf');
-      }
-    }
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('service-worker.js')
-          .then((reg) => {
-            console.log('Service Worker registrado com sucesso:', reg);
-          })
-          .catch((err) => {
-            console.log('Falha no registro
+</body>
+</html>
