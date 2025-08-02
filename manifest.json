@@ -1,20 +1,21 @@
 {
-  "name": "Nome da sua PWA",
-  "short_name": "PWA",
+  "name": "Ata de Monitoramento",
+  "short_name": "Ata Monitoramento",
+  "description": "Aplicativo para gerar atas de monitoramento em PDF.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
   "icons": [
     {
-      "src": "/caminho/para/imagem_57099f.png",
+      "src": "imagem_57099f.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/caminho/para/imagem_57099f.png",
+      "src": "imagem_57099f.png",
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000"
+  ]
 }
