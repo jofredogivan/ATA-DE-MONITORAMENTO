@@ -1,4 +1,236 @@
-/* ... [restante do CSS do tema escuro] ... */
+/* style.css */
+
+/* --- Variáveis e Configurações Globais --- */
+:root {
+    /* Cores adaptadas para o tema escuro */
+    --primary-color: #1e88e5; /* Azul mais vibrante para destaque */
+    --secondary-color: #42a5f5; /* Azul claro para elementos secundários */
+    --text-color: #e0e0e0;
+    --secondary-text-color: #b0b0b0;
+    --background-dark: #121212; /* Fundo principal muito escuro */
+    --card-bg: #1e1e1e; /* Fundo dos blocos, sutilmente mais claro */
+    --border-color: #333;
+    --input-bg: #2b2b2b;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --font-main: 'Roboto', sans-serif;
+    --font-heading: 'Montserrat', sans-serif;
+}
+
+/* Importa fontes do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@400;500&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--background-dark);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* --- Estrutura da Página e Capa --- */
+.page {
+    width: 100%;
+    max-width: 650px;
+    background-color: transparent; /* Não tem fundo para o modo escuro */
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.capa {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--card-bg); /* O card da capa tem o fundo escuro */
+    padding: 40px;
+}
+
+.capa img {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 40px;
+}
+
+.titulo-capa {
+    font-family: var(--font-heading);
+    font-size: 2.5em;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    text-transform: uppercase;
+    color: var(--primary-color);
+}
+
+.capa .btn {
+    position: static;
+    transform: none;
+    margin-top: 40px;
+}
+
+/* --- Estilos do Conteúdo da Ata --- */
+h1 {
+    font-family: var(--font-heading);
+    color: var(--primary-color);
+    font-size: 2.2em;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-family: var(--font-heading);
+    color: var(--secondary-color);
+    font-size: 1.4em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-group label {
+    font-size: 0.9em;
+    color: var(--secondary-text-color);
+}
+
+/* Campos de Formulário */
+input.input-field, textarea, select {
+    font-family: var(--font-main);
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input.input-field:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Estilos de Grupos de Campos (para plantonistas, ocorrências, etc.) */
+.plantonista-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.plantonista-item input {
+    margin-bottom: 0;
+}
+
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Checklist */
+.checklist-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+.checklist-list li label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+    color: var(--secondary-text-color);
+}
+.checklist-list input[type="checkbox"] {
+    width: auto;
+    margin-bottom: 0;
+}
+.checklist-list input[type="checkbox"]:checked + span {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* Botões */
+.btn {
+    font-family: var(--font-main);
+    padding: 12px 25px;
+    color: var(--text-color);
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+.btn.primary {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+.btn.primary:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn.secondary {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+}
+
+.btn.secondary:hover {
+    background-color: var(--border-color);
+    transform: translateY(-2px);
+}
+
+.center {
+    text-align: center;
+    margin-top: 40px;
+}
 
 /* Estilos para a navegação por páginas */
 .form-page {
@@ -33,4 +265,26 @@
 }
 .viatura-item:last-of-type, .veiculo-item:last-of-type {
     border-bottom: none;
+}
+
+/* --- Responsividade (Ajustes para telas menores) --- */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    .capa {
+        padding: 20px;
+    }
+    .titulo-capa {
+        font-size: 1.8em;
+    }
+    .plantonista-item, .grid-2-cols {
+        grid-template-columns: 1fr;
+    }
+    .checklist-list {
+        grid-template-columns: 1fr;
+    }
+    h1 {
+        font-size: 1.8em;
+    }
 }
