@@ -13,7 +13,7 @@
     --shadow-dark: rgba(0, 0, 0, 0.3);
 }
 
-/* Estilo global e body - CORRIGIDO */
+/* Estilo global e body */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--background-dark);
@@ -23,19 +23,20 @@ body {
     line-height: 1.6;
     display: flex;
     justify-content: center;
-    min-height: 100vh; /* Garante que o corpo da página tenha no mínimo 100% da altura */
+    align-items: flex-start; /* Restaurado para que o conteúdo da ata apareça no topo */
+    min-height: 100vh;
     box-sizing: border-box;
 }
 
-/* A classe .page foi removida do CSS para não limitar a capa */
-.page-content {
+/* Nova classe para o conteúdo da ata, com a formatação original */
+.ata-content {
     width: 100%;
     max-width: 800px;
     padding: 20px;
     box-sizing: border-box;
 }
 
-/* Estilização da capa - Nova versão com imagem de fundo */
+/* Estilização da capa - CORRIGIDO */
 .capa {
     background-image: url('assets/image_a77742.png');
     background-size: cover;
@@ -48,7 +49,7 @@ body {
     text-align: center;
     height: 100vh;
     width: 100vw;
-    position: fixed;
+    position: fixed; /* O elemento não ocupa espaço no layout e cobre a tela toda */
     top: 0;
     left: 0;
     z-index: 1000;
