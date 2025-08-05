@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
+    <meta name="theme-color" content="#1e1e1e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
@@ -102,7 +102,6 @@
                             <div class="input-group"><label>Averiguador</label><input class="viatura-averiguador input-field" placeholder="Averiguador"></div>
                             <div class="input-group"><label>Chegada</label><input class="viatura-chegada input-field" type="time"></div>
                             <div class="input-group"><label>Saída</label><input class="viatura-saida input-field" type="time"></div>
-                        </div>
                     </div>
                 </div>
                 <button type="button" class="btn secondary" onclick="adicionarViatura()">+ Adicionar Viatura</button>
@@ -117,7 +116,6 @@
                             <div class="input-group"><label>Chegada</label><input class="veiculo-chegada input-field" type="time"></div>
                             <div class="input-group"><label>Veículo</label><input class="veiculo-nome input-field" placeholder="Veículo"></div>
                             <div class="input-group"><label>Condutor</label><input class="veiculo-condutor input-field" placeholder="Condutor"></div>
-                        </div>
                     </div>
                 </div>
                 <button type="button" class="btn secondary" onclick="adicionarVeiculo()">+ Adicionar Veículo</button>
@@ -314,7 +312,7 @@
                 const newLogoWidth = 60;
                 const newLogoHeight = newLogoWidth / logoAspectRatio;
                 // Ajustando a posição Y da logo para ficar alinhada com o texto
-                doc.addImage(logoImg, 'PNG', pageWidth - margin - newLogoWidth, 10, newLogoWidth, newLogoHeight);
+                doc.addImage(logoImg, 'PNG', pageWidth - margin - newLogoWidth, 8, newLogoWidth, newLogoHeight);
             }
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
@@ -362,7 +360,7 @@
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(14);
             doc.text(title, margin, y);
-            y += titleHeight;
+            y += titleHeight - 2; // Reduz o espaço após o título
 
             doc.setFont("Helvetica", "normal");
             doc.setFontSize(12);
@@ -371,8 +369,7 @@
                 y += lineHeight;
             });
             
-            // Reduzindo o espaçamento entre as seções
-            y += 2;
+            y += 4; // Espaço fixo e reduzido entre as seções
         };
 
         // --- Gerando o conteúdo do PDF a partir dos múltiplos campos ---
