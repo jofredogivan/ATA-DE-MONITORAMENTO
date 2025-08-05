@@ -13,7 +13,7 @@
     --shadow-dark: rgba(0, 0, 0, 0.3);
 }
 
-/* Estilo global e body */
+/* Estilo global e body - CORRIGIDO */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--background-dark);
@@ -23,12 +23,12 @@ body {
     line-height: 1.6;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
+    min-height: 100vh; /* Garante que o corpo da página tenha no mínimo 100% da altura */
     box-sizing: border-box;
 }
 
-.page {
+/* A classe .page foi removida do CSS para não limitar a capa */
+.page-content {
     width: 100%;
     max-width: 800px;
     padding: 20px;
