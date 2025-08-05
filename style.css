@@ -3,17 +3,17 @@
 
 /* Variáveis de cores */
 :root {
-    --primary-color: #007bff; /* Azul primário, ideal para botões e destaques */
-    --secondary-color: #6c757d; /* Cinza secundário */
-    --background-dark: #1e1e1e; /* Fundo escuro */
-    --card-background: #2a2a2a; /* Fundo de cartões */
-    --text-color: #f0f0f0; /* Cor do texto claro */
-    --border-color: #444; /* Cor de borda sutil */
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-dark: #1e1e1e;
+    --card-background: #2a2a2a;
+    --text-color: #f0f0f0;
+    --border-color: #444;
     --shadow-light: rgba(0, 0, 0, 0.1);
     --shadow-dark: rgba(0, 0, 0, 0.3);
 }
 
-/* Estilo global e body - Centralizado e otimizado */
+/* Estilo global e body */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--background-dark);
@@ -35,24 +35,29 @@ body {
     box-sizing: border-box;
 }
 
-/* Estilização da capa - Nova versão */
+/* Estilização da capa - Nova versão com imagem de fundo */
 .capa {
+    background-image: url('assets/image_a77742.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     height: 100vh;
-}
-
-.logo-capa {
-    width: 250px;
-    height: auto;
-    margin-bottom: 25px;
-    animation: fadeIn 1.5s ease-in-out;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .info-capa {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 12px;
     margin-bottom: 40px;
 }
 
