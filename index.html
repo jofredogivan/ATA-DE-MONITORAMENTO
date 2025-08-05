@@ -282,30 +282,27 @@
 
     async function gerarPdfFormal() {
         const { jsPDF } = window.jspdf;
-        // Altera a orientação para 'portrait' (padrão)
         const doc = new jsPDF('p', 'mm', 'a4');
-        let y = 30; // Posição inicial no eixo Y
-        const lineHeight = 7; // Altura de linha fixa para o texto normal
-        const titleHeight = 8; // Altura de linha para o título
-        const margin = 15; // Margem lateral ajustada para 'a4' portrait
+        let y = 30;
+        const lineHeight = 7;
+        const titleHeight = 8;
+        const margin = 15;
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const textWidth = pageWidth - (margin * 2);
 
-        // Carregar as imagens de forma assíncrona
         const loadImage = (path) => {
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 img.onload = () => resolve(img);
                 img.onerror = () => {
                     console.warn(`Imagem não encontrada ou com erro: ${path}`);
-                    resolve(null); // Resolve com null para não travar a geração do PDF
+                    resolve(null);
                 };
                 img.src = path;
             });
         };
 
-        // Corrigindo o caminho da logo do cabeçalho
         const [logoImg, watermarkImg] = await Promise.all([
             loadImage('assets/logo_nova.png'),
             loadImage('icon.png')
@@ -313,11 +310,10 @@
         
         const addHeader = (doc) => {
             if (logoImg) {
-                // Aumentando a largura para 60mm e mantendo a proporção
                 const logoAspectRatio = logoImg.width / logoImg.height;
-                const newLogoWidth = 60; // Ajuste a largura conforme necessário
+                const newLogoWidth = 60;
                 const newLogoHeight = newLogoWidth / logoAspectRatio;
-                doc.addImage(logoImg, 'PNG', pageWidth - margin - newLogoWidth, 10, newLogoWidth, newLogoHeight);
+                doc.addImage(logoImg, 'PNG', pageWidth - margin - newLogoWidth, 8, newLogoWidth, newLogoHeight);
             }
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
@@ -329,9 +325,8 @@
             if (watermarkImg) {
                 doc.saveGraphicsState();
                 doc.setGState(new doc.GState({opacity: 0.1}));
-                // Aumentando significativamente a largura e altura da marca d'água
-                const watermarkWidth = 150; // Ajuste a largura conforme necessário
-                const watermarkHeight = 150; // Ajuste a altura conforme necessário
+                const watermarkWidth = 150;
+                const watermarkHeight = 150;
                 const watermarkX = (pageWidth / 2) - (watermarkWidth / 2);
                 const watermarkY = (pageHeight / 2) - (watermarkHeight / 2);
                 doc.addImage(watermarkImg, 'PNG', watermarkX, watermarkY, watermarkWidth, watermarkHeight);
@@ -340,7 +335,7 @@
         };
 
         const checkNewPage = (requiredHeight) => {
-            if (y + requiredHeight > pageHeight - 20) { // 20mm de margem inferior
+            if (y + requiredHeight > pageHeight - 20) {
                 doc.addPage();
                 y = 30;
                 addHeader(doc);
@@ -458,7 +453,7 @@
             
             const imgData = reader.result;
             const imgWidth = textWidth;
-            const imgHeight = 100; // Altura fixa da imagem
+            const imgHeight = 100;
             const requiredHeight = titleHeight + 5 + imgHeight + lineHeight;
             
             checkNewPage(requiredHeight);
@@ -471,7 +466,6 @@
             doc.addImage(imgData, 'JPEG', margin, y, imgWidth, imgHeight);
         }
 
-        // Salva o documento no final de tudo
         doc.save("ata_monitoramento_formal.pdf");
     }
 
