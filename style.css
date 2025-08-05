@@ -1,242 +1,89 @@
-/* style.css */
+/* Importação de fontes */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Roboto:wght@400;500&display=swap');
 
-/* --- Variáveis e Configurações Globais --- */
+/* Variáveis de cores */
 :root {
-    /* Cores adaptadas para o tema escuro */
-    --primary-color: #1e88e5; /* Azul mais vibrante para destaque */
-    --secondary-color: #42a5f5; /* Azul claro para elementos secundários */
-    --text-color: #e0e0e0;
-    --secondary-text-color: #b0b0b0;
-    --background-dark: #121212; /* Fundo principal muito escuro */
-    --card-bg: #1e1e1e; /* Fundo dos blocos, sutilmente mais claro */
-    --border-color: #333;
-    --input-bg: #2b2b2b;
-    --shadow-color: rgba(0, 0, 0, 0.4);
-    --font-main: 'Roboto', sans-serif;
-    --font-heading: 'Montserrat', sans-serif;
+    --primary-color: #007bff; /* Azul primário, ideal para botões e destaques */
+    --secondary-color: #6c757d; /* Cinza secundário */
+    --background-dark: #1e1e1e; /* Fundo escuro */
+    --card-background: #2a2a2a; /* Fundo de cartões */
+    --text-color: #f0f0f0; /* Cor do texto claro */
+    --border-color: #444; /* Cor de borda sutil */
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-dark: rgba(0, 0, 0, 0.3);
 }
 
-/* Importa fontes do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@400;500&display=swap');
-
-* {
-    box-sizing: border-box;
-}
-
+/* Estilo global e body */
 body {
-    font-family: var(--font-main);
+    font-family: 'Roboto', sans-serif;
     background-color: var(--background-dark);
     color: var(--text-color);
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    line-height: 1.6;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     min-height: 100vh;
+    box-sizing: border-box;
 }
 
-/* --- Estrutura da Página e Capa --- */
 .page {
     width: 100%;
-    max-width: 650px;
-    background-color: transparent; /* Não tem fundo para o modo escuro */
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
+    max-width: 800px;
+    padding: 20px;
     box-sizing: border-box;
-    margin: 0;
-    position: relative;
-    overflow: hidden;
 }
 
+/* Estilização da capa */
 .capa {
-    width: 100%;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     text-align: center;
-    background-color: var(--card-bg); /* O card da capa tem o fundo escuro */
-    padding: 40px;
+    height: 100vh;
 }
 
-.capa img {
-    max-width: 200px;
+.logo-capa {
+    width: 250px;
     height: auto;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+    animation: fadeIn 1.5s ease-in-out;
 }
 
 .titulo-capa {
-    font-family: var(--font-heading);
+    font-family: 'Montserrat', sans-serif;
     font-size: 2.5em;
-    font-weight: 700;
-    letter-spacing: 2px;
-    margin: 0;
-    text-transform: uppercase;
-    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 40px;
+    color: var(--text-color);
+    text-shadow: 2px 2px 4px var(--shadow-dark);
 }
 
-.capa .btn {
-    position: static;
-    transform: none;
-    margin-top: 40px;
-}
-
-/* --- Estilos do Conteúdo da Ata --- */
+/* Estilização do formulário */
 h1 {
-    font-family: var(--font-heading);
-    color: var(--primary-color);
-    font-size: 2.2em;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
     text-align: center;
+    margin-top: 40px;
     margin-bottom: 30px;
 }
 
 h2 {
-    font-family: var(--font-heading);
-    color: var(--secondary-color);
-    font-size: 1.4em;
-    margin-top: 0;
-    margin-bottom: 15px;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 8px;
-}
-
-.card {
-    background-color: var(--card-bg);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 15px var(--shadow-color);
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.input-group label {
-    font-size: 0.9em;
-    color: var(--secondary-text-color);
-}
-
-/* Campos de Formulário */
-input.input-field, textarea, select {
-    font-family: var(--font-main);
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    box-sizing: border-box;
-    font-size: 1em;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-input.input-field:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
-}
-
-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-/* Estilos de Grupos de Campos (para plantonistas, ocorrências, etc.) */
-.plantonista-item {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.2em;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
     margin-bottom: 15px;
 }
-.plantonista-item input {
-    margin-bottom: 0;
-}
 
-.grid-2-cols {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.full-width {
-    grid-column: 1 / -1;
-}
-
-/* Checklist */
-.checklist-list {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 15px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
-.checklist-list li label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    gap: 10px;
-    color: var(--secondary-text-color);
-}
-.checklist-list input[type="checkbox"] {
-    width: auto;
-    margin-bottom: 0;
-}
-.checklist-list input[type="checkbox"]:checked + span {
-    color: var(--primary-color);
-    text-decoration: none;
-}
-
-/* Botões */
-.btn {
-    font-family: var(--font-main);
-    padding: 12px 25px;
-    color: var(--text-color);
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    white-space: nowrap;
-}
-
-.btn.primary {
-    background-color: var(--primary-color);
-    color: var(--text-light);
-}
-
-.btn.primary:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn.secondary {
-    background-color: var(--input-bg);
-    border: 1px solid var(--border-color);
-}
-
-.btn.secondary:hover {
-    background-color: var(--border-color);
-    transform: translateY(-2px);
-}
-
-.center {
-    text-align: center;
-    margin-top: 40px;
-}
-
-/* Estilos para a navegação por páginas */
 .form-page {
     display: none;
+    transition: opacity 0.5s ease;
     opacity: 0;
-    transition: opacity 0.4s ease;
+    padding-bottom: 50px;
 }
 
 .form-page.active {
@@ -244,47 +91,144 @@ textarea {
     opacity: 1;
 }
 
+.card {
+    background-color: var(--card-background);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px var(--shadow-dark);
+    border: 1px solid var(--border-color);
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.input-field,
+textarea.input-field,
+select.input-field {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    background-color: #333;
+    color: var(--text-color);
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+textarea.input-field {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: transform 0.2s, background-color 0.2s;
+    text-transform: uppercase;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn.primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn.primary:hover {
+    background-color: #0056b3;
+}
+
+.btn.secondary {
+    background-color: var(--secondary-color);
+    color: #fff;
+    margin-top: 15px;
+}
+
+.btn.secondary:hover {
+    background-color: #5a6268;
+}
+
 .form-nav {
     display: flex;
     justify-content: space-between;
-    margin-top: 25px;
-}
-.form-nav .btn {
-    width: 48%;
+    align-items: center;
+    margin-top: 20px;
 }
 
-.final-buttons .btn {
-    width: 100%;
+.final-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
 }
 
-/* Os estilos para 'adicionar mais' viaturas e veículos */
-.viatura-item, .veiculo-item {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px dashed var(--border-color);
-}
-.viatura-item:last-of-type, .veiculo-item:last-of-type {
-    border-bottom: none;
+/* Layout de colunas */
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
 }
 
-/* --- Responsividade (Ajustes para telas menores) --- */
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
+.full-width {
+    grid-column: span 2;
+}
+
+/* Estilo para listas e checkboxes */
+.checklist-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checklist-list li {
+    background-color: #333;
+    border-radius: 8px;
+    padding: 10px;
+    flex: 1 1 200px; /* Adapta-se ao espaço, mas com largura mínima */
+}
+
+.checklist-list label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checklist-list input[type="checkbox"] {
+    accent-color: var(--primary-color);
+    transform: scale(1.2);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
-    .capa {
-        padding: 20px;
-    }
-    .titulo-capa {
-        font-size: 1.8em;
-    }
-    .plantonista-item, .grid-2-cols {
-        grid-template-columns: 1fr;
-    }
-    .checklist-list {
-        grid-template-columns: 1fr;
-    }
-    h1 {
-        font-size: 1.8em;
+    to {
+        opacity: 1;
     }
 }
