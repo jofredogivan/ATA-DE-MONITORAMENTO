@@ -1,192 +1,192 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ata de Monitoramento</title>
-    
-    <link rel="stylesheet" href="style.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ata de Monitoramento</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 
 <div class="page capa" id="capa">
-    <img src="assets/image_987e83.png" alt="Capa da Ata" class="logo-capa">
-    <h1 class="titulo-capa">Ata de Monitoramento</h1>
-    <div class="center">
-        <button class="btn primary" onclick="iniciarAta()">Iniciar Nova Ata</button>
-    </div>
+    <img src="assets/image_987e83.png" alt="Capa da Ata" class="logo-capa">
+    <h1 class="titulo-capa">Ata de Monitoramento</h1>
+    <div class="center">
+        <button class="btn primary" onclick="iniciarAta()">Iniciar Nova Ata</button>
+    </div>
 </div>
 
 <div class="page" id="conteudo" style="display: none;">
-    <h1>Gerador de Ata</h1>
-    <form id="ataForm">
-        <div class="form-page active" id="page-1">
-            <section class="card">
-                <h2>Informações do Plantão</h2>
-                <div class="input-group">
-                    <label for="dataPlantao">Data do Plantão</label>
-                    <input id="dataPlantao" type="date" class="input-field">
-                </div>
-                <div class="input-group">
-                    <label for="horario">Horário do Plantão</label>
-                    <select id="horario" class="input-field">
-                        <option>07:00 às 19:00</option>
-                        <option>19:00 às 07:00</option>
-                    </select>
-                </div>
-            </section>
-            <section class="card">
-                <h2>Plantonistas</h2>
-                <div id="plantonistas">
-                    <div class="plantonista-item">
-                        <input class="nome input-field" placeholder="Nome">
-                        <input class="cargo input-field" placeholder="Cargo">
-                    </div>
-                </div>
-                <button type="button" class="btn secondary" onclick="adicionarPlantonista()">+ Adicionar Plantonista</button>
-            </section>
-            <div class="form-nav">
-                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
-            </div>
-        </div>
+    <h1>Gerador de Ata</h1>
+    <form id="ataForm">
+        <div class="form-page active" id="page-1">
+            <section class="card">
+                <h2>Informações do Plantão</h2>
+                <div class="input-group">
+                    <label for="dataPlantao">Data do Plantão</label>
+                    <input id="dataPlantao" type="date" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label for="horario">Horário do Plantão</label>
+                    <select id="horario" class="input-field">
+                        <option>07:00 às 19:00</option>
+                        <option>19:00 às 07:00</option>
+                    </select>
+                </div>
+            </section>
+            <section class="card">
+                <h2>Plantonistas</h2>
+                <div id="plantonistas">
+                    <div class="plantonista-item">
+                        <input class="nome input-field" placeholder="Nome">
+                        <input class="cargo input-field" placeholder="Cargo">
+                    </div>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarPlantonista()">+ Adicionar Plantonista</button>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
+            </div>
+        </div>
 
-        <div class="form-page" id="page-2">
-            <section class="card">
-                <h2>Ocorrências</h2>
-                <div id="ocorrencias">
-                    <textarea class="ocorrencia input-field" placeholder="Descreva a ocorrência..."></textarea>
-                </div>
-                <button type="button" class="btn secondary" onclick="adicionarOcorrencia()">+ Adicionar Ocorrência</button>
-            </section>
-            <section class="card">
-                <h2>Ocorrências de Portaria</h2>
-                <div id="ocorrenciasPortaria">
-                    <textarea class="portaria input-field" placeholder="Descreva a ocorrência de portaria..."></textarea>
-                </div>
-                <button type="button" class="btn secondary" onclick="adicionarOcorrenciaPortaria()">+ Adicionar Ocorrência</button>
-            </section>
-            <section class="card">
-                <h2>Ordens de Serviço</h2>
-                <div id="ordens">
-                    <textarea class="ordem input-field" placeholder="Descreva a ordem de serviço..."></textarea>
-                </div>
-                <button type="button" class="btn secondary" onclick="adicionarOrdem()">+ Adicionar Serviço</button>
-            </section>
-            <div class="form-nav">
-                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
-                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
-            </div>
-        </div>
+        <div class="form-page" id="page-2">
+            <section class="card">
+                <h2>Ocorrências</h2>
+                <div id="ocorrencias">
+                    <textarea class="ocorrencia input-field" placeholder="Descreva a ocorrência..."></textarea>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarOcorrencia()">+ Adicionar Ocorrência</button>
+            </section>
+            <section class="card">
+                <h2>Ocorrências de Portaria</h2>
+                <div id="ocorrenciasPortaria">
+                    <textarea class="portaria input-field" placeholder="Descreva a ocorrência de portaria..."></textarea>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarOcorrenciaPortaria()">+ Adicionar Ocorrência</button>
+            </section>
+            <section class="card">
+                <h2>Ordens de Serviço</h2>
+                <div id="ordens">
+                    <textarea class="ordem input-field" placeholder="Descreva a ordem de serviço..."></textarea>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarOrdem()">+ Adicionar Serviço</button>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
+                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
+            </div>
+        </div>
 
-        <div class="form-page" id="page-3">
-            <section class="card">
-                <h2>Envio de Viatura</h2>
-                <div id="viaturas">
-                    <div class="viatura-item">
-                        <div class="grid-2-cols">
-                            <div class="input-group"><label>Data</label><input class="viatura-data input-field" type="date"></div>
-                            <div class="input-group"><label>Hora</label><input class="viatura-hora input-field" type="time"></div>
-                            <div class="input-group"><label>Solicitante</label><input class="viatura-solicitante input-field" placeholder="Solicitante"></div>
-                            <div class="input-group"><label>Veículo</label><input class="viatura-veiculo input-field" placeholder="Veículo"></div>
-                            <div class="input-group"><label>Averiguador</label><input class="viatura-averiguador input-field" placeholder="Averiguador"></div>
-                            <div class="input-group"><label>Chegada</label><input class="viatura-chegada input-field" type="time"></div>
-                            <div class="input-group"><label>Saída</label><input class="viatura-saida input-field" type="time"></div>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="btn secondary" onclick="adicionarViatura()">+ Adicionar Viatura</button>
-            </section>
-            <section class="card">
-                <h2>Controle de Veículos</h2>
-                <div id="veiculos">
-                    <div class="veiculo-item">
-                        <div class="grid-2-cols">
-                            <div class="input-group"><label>Data</label><input class="veiculo-data input-field" type="date"></div>
-                            <div class="input-group"><label>Saída</label><input class="veiculo-saida input-field" type="time"></div>
-                            <div class="input-group"><label>Chegada</label><input class="veiculo-chegada input-field" type="time"></div>
-                            <div class="input-group"><label>Veículo</label><input class="veiculo-nome input-field" placeholder="Veículo"></div>
-                            <div class="input-group"><label>Condutor</label><input class="veiculo-condutor input-field" placeholder="Condutor"></div>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="btn secondary" onclick="adicionarVeiculo()">+ Adicionar Veículo</button>
-            </section>
-            <div class="form-nav">
-                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
-                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
-            </div>
-        </div>
+        <div class="form-page" id="page-3">
+            <section class="card">
+                <h2>Envio de Viatura</h2>
+                <div id="viaturas">
+                    <div class="viatura-item">
+                        <div class="grid-2-cols">
+                            <div class="input-group"><label>Data</label><input class="viatura-data input-field" type="date"></div>
+                            <div class="input-group"><label>Hora</label><input class="viatura-hora input-field" type="time"></div>
+                            <div class="input-group"><label>Solicitante</label><input class="viatura-solicitante input-field" placeholder="Solicitante"></div>
+                            <div class="input-group"><label>Veículo</label><input class="viatura-veiculo input-field" placeholder="Veículo"></div>
+                            <div class="input-group"><label>Averiguador</label><input class="viatura-averiguador input-field" placeholder="Averiguador"></div>
+                            <div class="input-group"><label>Chegada</label><input class="viatura-chegada input-field" type="time"></div>
+                            <div class="input-group"><label>Saída</label><input class="viatura-saida input-field" type="time"></div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarViatura()">+ Adicionar Viatura</button>
+            </section>
+            <section class="card">
+                <h2>Controle de Veículos</h2>
+                <div id="veiculos">
+                    <div class="veiculo-item">
+                        <div class="grid-2-cols">
+                            <div class="input-group"><label>Data</label><input class="veiculo-data input-field" type="date"></div>
+                            <div class="input-group"><label>Saída</label><input class="veiculo-saida input-field" type="time"></div>
+                            <div class="input-group"><label>Chegada</label><input class="veiculo-chegada input-field" type="time"></div>
+                            <div class="input-group"><label>Veículo</label><input class="veiculo-nome input-field" placeholder="Veículo"></div>
+                            <div class="input-group"><label>Condutor</label><input class="veiculo-condutor input-field" placeholder="Condutor"></div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarVeiculo()">+ Adicionar Veículo</button>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
+                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
+            </div>
+        </div>
 
-        <div class="form-page" id="page-4">
-            <section class="card">
-                <h2>Controle de Vídeo Alerta</h2>
-                <input type="file" id="videoAlertaImagem" accept="image/*" class="input-file">
-            </section>
-            <section class="card">
-                <h2>Controle da Paradox</h2>
-                <div class="grid-2-cols">
-                    <div class="input-group"><label>Online</label><input id="paradoxOnline" type="number" placeholder="Quantas Online" class="input-field"></div>
-                    <div class="input-group"><label>Offline</label><input id="paradoxOffline" type="number" placeholder="Quantas Offline" class="input-field"></div>
-                    <div class="input-group full-width"><label>Horário</label><input type="datetime-local" id="paradoxHorario" class="input-field"></div>
-                </div>
-            </section>
-            <section class="card">
-                <h2>Checklist</h2>
-                <ul id="checklist" class="checklist-list">
-                    <li><label><input type="checkbox" checked> 04 Ramais</label></li>
-                    <li><label><input type="checkbox" checked> 04 Controle de TV</label></li>
-                    <li><label><input type="checkbox" checked> 01 Controle de Ar</label></li>
-                    <li><label><input type="checkbox" checked> 02 Celulares com carregador</label></li>
-                    <li><label><input type="checkbox" checked> 04 Mouse</label></li>
-                    <li><label><input type="checkbox" checked> 04 Teclado</label></li>
-                    <li><label><input type="checkbox" checked> 02 Lanterna</label></li>
-                    <li><label><input type="checkbox" checked> 01 Cabo de Bateria</label></li>
-                    <li><label><input type="checkbox" checked> 06 Cartões de Abastecimento</label></li>
-                    <li><label><input type="checkbox" checked> 06 CPU</label></li>
-                    <li><label><input type="checkbox" checked> 11 Monitores</label></li>
-                    <li><label><input type="checkbox" checked> 01 Microfone</label></li>
-                    <li><label><input type="checkbox" checked> Material Emergencial</label></li>
-                    <li><label><input type="checkbox" checked> 01 Placa Central Triflex</label></li>
-                    <li><label><input type="checkbox" checked> 01 Caixa de Ferramentas</label></li>
-                </ul>
-            </section>
-            <div class="form-nav">
-                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
-                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
-            </div>
-        </div>
+        <div class="form-page" id="page-4">
+            <section class="card">
+                <h2>Controle de Vídeo Alerta</h2>
+                <input type="file" id="videoAlertaImagem" accept="image/*" class="input-file">
+            </section>
+            <section class="card">
+                <h2>Controle da Paradox</h2>
+                <div class="grid-2-cols">
+                    <div class="input-group"><label>Online</label><input id="paradoxOnline" type="number" placeholder="Quantas Online" class="input-field"></div>
+                    <div class="input-group"><label>Offline</label><input id="paradoxOffline" type="number" placeholder="Quantas Offline" class="input-field"></div>
+                    <div class="input-group full-width"><label>Horário</label><input type="datetime-local" id="paradoxHorario" class="input-field"></div>
+                </div>
+            </section>
+            <section class="card">
+                <h2>Checklist</h2>
+                <ul id="checklist" class="checklist-list">
+                    <li><label><input type="checkbox" checked> 04 Ramais</label></li>
+                    <li><label><input type="checkbox" checked> 04 Controle de TV</label></li>
+                    <li><label><input type="checkbox" checked> 01 Controle de Ar</label></li>
+                    <li><label><input type="checkbox" checked> 02 Celulares com carregador</label></li>
+                    <li><label><input type="checkbox" checked> 04 Mouse</label></li>
+                    <li><label><input type="checkbox" checked> 04 Teclado</label></li>
+                    <li><label><input type="checkbox" checked> 02 Lanterna</label></li>
+                    <li><label><input type="checkbox" checked> 01 Cabo de Bateria</label></li>
+                    <li><label><input type="checkbox" checked> 06 Cartões de Abastecimento</label></li>
+                    <li><label><input type="checkbox" checked> 06 CPU</label></li>
+                    <li><label><input type="checkbox" checked> 11 Monitores</label></li>
+                    <li><label><input type="checkbox" checked> 01 Microfone</label></li>
+                    <li><label><input type="checkbox" checked> Material Emergencial</label></li>
+                    <li><label><input type="checkbox" checked> 01 Placa Central Triflex</label></li>
+                    <li><label><input type="checkbox" checked> 01 Caixa de Ferramentas</label></li>
+                </ul>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
+                <button type="button" class="btn primary" onclick="nextPage()">Próximo</button>
+            </div>
+        </div>
 
-        <div class="form-page" id="page-5">
-            <section class="card">
-                <h2>Assinaturas</h2>
-                <div class="input-group">
-                    <label for="assinaturaPassa">Quem Passa o Plantão</label>
-                    <input id="assinaturaPassa" placeholder="Nome" class="input-field">
-                </div>
-                <div class="input-group">
-                    <label for="assinaturaRecebe">Quem Recebe o Plantão</label>
-                    <input id="assinaturaRecebe" placeholder="Nome" class="input-field">
-                </div>
-            </section>
-            <div class="form-nav">
-                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
-            </div>
-            <div class="center final-buttons">
-                <button type="button" class="btn primary" onclick="gerarPdfFormal()">Gerar PDF Formal</button>
-            </div>
-        </div>
-    </form>
+        <div class="form-page" id="page-5">
+            <section class="card">
+                <h2>Assinaturas</h2>
+                <div class="input-group">
+                    <label for="assinaturaPassa">Quem Passa o Plantão</label>
+                    <input id="assinaturaPassa" placeholder="Nome" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label for="assinaturaRecebe">Quem Recebe o Plantão</label>
+                    <input id="assinaturaRecebe" placeholder="Nome" class="input-field">
+                </div>
+            </section>
+            <div class="form-nav">
+                <button type="button" class="btn secondary" onclick="prevPage()">Anterior</button>
+            </div>
+            <div class="center final-buttons">
+                <button type="button" class="btn primary" onclick="gerarPdfFormal()">Gerar PDF Formal</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <script>
@@ -282,77 +282,84 @@
 
     async function gerarPdfFormal() {
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('l'); 
-        let y = 30;
-        const lineHeight = 7;
-        const titleHeight = 8;
-        const margin = 20;
+        // Altera a orientação para 'portrait' (padrão)
+        const doc = new jsPDF('p', 'mm', 'a4');
+        let y = 30; // Posição inicial no eixo Y
+        const lineHeight = 7; // Altura de linha fixa para o texto normal
+        const titleHeight = 8; // Altura de linha para o título
+        const margin = 15; // Margem lateral ajustada para 'a4' portrait
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const textWidth = pageWidth - (margin * 2);
 
-        const logoImgPath = 'assets/logo_nova.png'; 
-        const watermarkImgPath = 'icon.png';
-
+        // Carregar as imagens de forma assíncrona
         const loadImage = (path) => {
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 img.onload = () => resolve(img);
-                img.onerror = () => reject(new Error(`Erro ao carregar a imagem: ${path}`));
+                img.onerror = () => {
+                    console.warn(`Imagem não encontrada ou com erro: ${path}`);
+                    resolve(null); // Resolve com null para não travar a geração do PDF
+                };
                 img.src = path;
             });
         };
 
-        let logoImg, watermarkImg;
-        try {
-            [logoImg, watermarkImg] = await Promise.all([
-                loadImage(logoImgPath),
-                loadImage(watermarkImgPath)
-            ]);
-        } catch (e) {
-            console.error("Falha ao gerar o PDF:", e.message);
-            alert("Erro ao gerar o PDF. Verifique o console para mais detalhes. A imagem pode não existir ou o caminho pode estar incorreto.");
-            return;
-        }
-
+        // Corrigindo o caminho da logo do cabeçalho
+        const [logoImg, watermarkImg] = await Promise.all([
+            loadImage('assets/logo_nova.png'),
+            loadImage('icon.png')
+        ]);
+        
         const addHeader = (doc) => {
-            doc.addImage(logoImg, 'PNG', 240, 10, 60, 30); 
+            if (logoImg) {
+                // Aumentando a largura para 60mm e mantendo a proporção
+                const logoAspectRatio = logoImg.width / logoImg.height;
+                const newLogoWidth = 60; // Ajuste a largura conforme necessário
+                const newLogoHeight = newLogoWidth / logoAspectRatio;
+                doc.addImage(logoImg, 'PNG', pageWidth - margin - newLogoWidth, 10, newLogoWidth, newLogoHeight);
+            }
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
             doc.text("Ata de Monitoramento Online", margin, 15);
-            doc.line(10, 20, 287, 20);
+            doc.line(margin, 20, pageWidth - margin, 20);
         };
         
         const addWatermark = (doc) => {
-            doc.saveGraphicsState();
-            doc.setGState(new doc.GState({opacity: 0.1})); 
-            doc.addImage(watermarkImg, 'PNG', 95, 80, 200, 200); 
-            doc.restoreGraphicsState();
-        };
-
-        const checkPageAndAddHeader = () => {
-            if (y + 20 > 200) { 
-                doc.addPage();
-                y = 30;
-                addWatermark(doc);
-                addHeader(doc);
+            if (watermarkImg) {
+                doc.saveGraphicsState();
+                doc.setGState(new doc.GState({opacity: 0.1}));
+                // Aumentando significativamente a largura e altura da marca d'água
+                const watermarkWidth = 150; // Ajuste a largura conforme necessário
+                const watermarkHeight = 150; // Ajuste a altura conforme necessário
+                const watermarkX = (pageWidth / 2) - (watermarkWidth / 2);
+                const watermarkY = (pageHeight / 2) - (watermarkHeight / 2);
+                doc.addImage(watermarkImg, 'PNG', watermarkX, watermarkY, watermarkWidth, watermarkHeight);
+                doc.restoreGraphicsState();
             }
         };
-        
-        addWatermark(doc);
+
+        const checkNewPage = (requiredHeight) => {
+            if (y + requiredHeight > pageHeight - 20) { // 20mm de margem inferior
+                doc.addPage();
+                y = 30;
+                addHeader(doc);
+                addWatermark(doc);
+            }
+        };
+
         addHeader(doc);
+        addWatermark(doc);
         
         const v = sel => document.querySelector(sel)?.value || "";
-        const getLines = (text, width) => doc.splitTextToSize(text, width);
+        const getLines = (text) => doc.splitTextToSize(text, textWidth);
 
         const addSection = (title, content) => {
             const contentFormatted = content.trim() ? content : "N/A";
-            const lines = getLines(contentFormatted, 287 - (margin * 2)); 
+            const lines = getLines(contentFormatted);
             const requiredHeight = titleHeight + (lines.length * lineHeight) + lineHeight;
 
-            if (y + requiredHeight > 200) {
-                doc.addPage();
-                y = 30;
-                addWatermark(doc);
-                addHeader(doc);
-            }
+            checkNewPage(requiredHeight);
 
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(14);
@@ -370,9 +377,7 @@
         };
 
         // --- Gerando o conteúdo do PDF a partir dos múltiplos campos ---
-        let infoPlantao = `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`;
-        addSection("Informações do Plantão", infoPlantao);
-        checkPageAndAddHeader();
+        addSection("Informações do Plantão", `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`);
 
         let plantonistas = "";
         document.querySelectorAll('#plantonistas .plantonista-item').forEach(item => {
@@ -381,28 +386,24 @@
             if (nome) plantonistas += `• ${nome} - ${cargo || "Sem cargo"}\n`;
         });
         addSection("Plantonistas", plantonistas);
-        checkPageAndAddHeader();
 
         let ocorrencias = "";
         document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
             if (el.value) ocorrencias += `• ${el.value}\n`;
         });
         addSection("Ocorrências", ocorrencias);
-        checkPageAndAddHeader();
 
         let portaria = "";
         document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
             if (el.value) portaria += `• ${el.value}\n`;
         });
         addSection("Ocorrências de Portaria", portaria);
-        checkPageAndAddHeader();
 
         let ordens = "";
         document.querySelectorAll('#ordens .ordem').forEach(el => {
             if (el.value) ordens += `• ${el.value}\n`;
         });
         addSection("Ordens de Serviço", ordens);
-        checkPageAndAddHeader();
         
         let viaturas = "";
         document.querySelectorAll('#viaturas .viatura-item').forEach(item => {
@@ -418,7 +419,6 @@
             }
         });
         addSection("Envio de Viatura", viaturas);
-        checkPageAndAddHeader();
 
         let veiculos = "";
         document.querySelectorAll('#veiculos .veiculo-item').forEach(item => {
@@ -432,13 +432,11 @@
             }
         });
         addSection("Controle de Veículos", veiculos);
-        checkPageAndAddHeader();
 
         const paradoxOnline = v('#paradoxOnline');
         const paradoxOffline = v('#paradoxOffline');
         let paradox = `${paradoxOnline || '0'} Online, ${paradoxOffline || '0'} Offline\nHorário: ${v('#paradoxHorario')}`;
         addSection("Controle da Paradox", paradox);
-        checkPageAndAddHeader();
 
         let checklist = "";
         document.querySelectorAll('#checklist li input[type="checkbox"]').forEach(checkbox => {
@@ -447,44 +445,34 @@
             }
         });
         addSection("Checklist", checklist);
-        checkPageAndAddHeader();
 
         let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}\nQuem Recebe: ${v('#assinaturaRecebe')}`;
         addSection("Assinaturas", assinaturas);
-        checkPageAndAddHeader();
 
+        // --- Adicionar a imagem de vídeo alerta por último ---
         const imgInput = document.getElementById("videoAlertaImagem");
         if (imgInput.files.length > 0) {
             const reader = new FileReader();
-            reader.onload = async function(e) {
-                const imgData = e.target.result;
-                const imgHeight = 100;
-                const sectionTitleHeight = titleHeight + 5;
-                const requiredHeight = sectionTitleHeight + imgHeight + lineHeight;
-
-                if (y + requiredHeight > 200) {
-                    doc.addPage();
-                    y = 30;
-                    addWatermark(doc);
-                    addHeader(doc);
-                }
-                
-                doc.setFont("Helvetica", "bold");
-                doc.setFontSize(14);
-                doc.text("Controle de Vídeo Alerta", margin, y);
-                y += sectionTitleHeight;
-                
-                doc.addImage(imgData, 'JPEG', margin, y, 257, imgHeight);
-                doc.save("ata_monitoramento_formal.pdf");
-            };
-            reader.onerror = function() {
-                console.error("Erro ao carregar a imagem do arquivo de vídeo alerta.");
-                doc.save("ata_monitoramento_formal.pdf");
-            };
             reader.readAsDataURL(imgInput.files[0]);
-        } else {
-            doc.save("ata_monitoramento_formal.pdf");
+            await new Promise(resolve => reader.onload = resolve);
+            
+            const imgData = reader.result;
+            const imgWidth = textWidth;
+            const imgHeight = 100; // Altura fixa da imagem
+            const requiredHeight = titleHeight + 5 + imgHeight + lineHeight;
+            
+            checkNewPage(requiredHeight);
+
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text("Controle de Vídeo Alerta", margin, y);
+            y += titleHeight + 5;
+            
+            doc.addImage(imgData, 'JPEG', margin, y, imgWidth, imgHeight);
         }
+
+        // Salva o documento no final de tudo
+        doc.save("ata_monitoramento_formal.pdf");
     }
 
     if ('serviceWorker' in navigator) {
