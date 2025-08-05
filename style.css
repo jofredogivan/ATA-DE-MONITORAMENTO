@@ -31,7 +31,7 @@ body {
 .page {
     width: 100%;
     max-width: 800px;
-    padding: 20px;
+    padding: 10px; /* Espaçamento reduzido */
     box-sizing: border-box;
 }
 
@@ -48,7 +48,7 @@ body {
 .logo-capa {
     width: 250px;
     height: auto;
-    margin-bottom: 30px;
+    margin-bottom: 20px; /* Espaçamento reduzido */
     animation: fadeIn 1.5s ease-in-out;
 }
 
@@ -56,7 +56,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-size: 2.5em;
     font-weight: 600;
-    margin-bottom: 40px;
+    margin-bottom: 30px; /* Espaçamento reduzido */
     color: var(--text-color);
     text-shadow: 2px 2px 4px var(--shadow-dark);
 }
@@ -66,24 +66,24 @@ h1 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     text-align: center;
-    margin-top: 40px;
-    margin-bottom: 30px;
+    margin-top: 20px; /* Espaçamento reduzido */
+    margin-bottom: 20px; /* Espaçamento reduzido */
 }
 
 h2 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
-    font-size: 1.2em;
+    font-size: 1.1em; /* Tamanho da fonte um pouco menor */
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Espaçamento reduzido */
 }
 
 .form-page {
     display: none;
     transition: opacity 0.5s ease;
     opacity: 0;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
 }
 
 .form-page.active {
@@ -93,34 +93,35 @@ h2 {
 
 .card {
     background-color: var(--card-background);
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 15px; /* Espaçamento interno reduzido */
+    margin-bottom: 15px; /* Espaçamento entre cards reduzido */
     border-radius: 12px;
     box-shadow: 0 4px 8px var(--shadow-dark);
     border: 1px solid var(--border-color);
 }
 
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Espaçamento entre inputs reduzido */
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 3px; /* Espaçamento reduzido */
     font-weight: 500;
     color: var(--text-color);
+    font-size: 0.9em; /* Tamanho da fonte um pouco menor */
 }
 
 .input-field,
 textarea.input-field,
 select.input-field {
     width: 100%;
-    padding: 12px;
+    padding: 10px; /* Espaçamento interno reduzido */
     border: 1px solid var(--border-color);
     background-color: #333;
     color: var(--text-color);
     border-radius: 8px;
-    font-size: 1em;
+    font-size: 0.95em;
     box-sizing: border-box;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -132,16 +133,16 @@ select.input-field {
 }
 
 textarea.input-field {
-    min-height: 100px;
+    min-height: 80px; /* Altura mínima reduzida */
     resize: vertical;
 }
 
 .btn {
-    padding: 12px 25px;
+    padding: 10px 20px; /* Espaçamento interno reduzido */
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 0.9em; /* Tamanho da fonte menor */
     font-weight: 600;
     transition: transform 0.2s, background-color 0.2s;
     text-transform: uppercase;
@@ -163,7 +164,7 @@ textarea.input-field {
 .btn.secondary {
     background-color: var(--secondary-color);
     color: #fff;
-    margin-top: 15px;
+    margin-top: 10px; /* Espaçamento reduzido */
 }
 
 .btn.secondary:hover {
@@ -174,20 +175,20 @@ textarea.input-field {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 15px; /* Espaçamento reduzido */
 }
 
 .final-buttons {
     display: flex;
     justify-content: flex-end;
-    margin-top: 20px;
+    margin-top: 15px; /* Espaçamento reduzido */
 }
 
 /* Layout de colunas */
 .grid-2-cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 10px; /* Espaçamento entre colunas reduzido */
 }
 
 .full-width {
@@ -201,26 +202,27 @@ textarea.input-field {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px; /* Espaçamento entre itens reduzido */
 }
 
 .checklist-list li {
     background-color: #333;
     border-radius: 8px;
-    padding: 10px;
-    flex: 1 1 200px; /* Adapta-se ao espaço, mas com largura mínima */
+    padding: 8px; /* Espaçamento interno reduzido */
+    flex: 1 1 180px; /* Largura mínima ajustada */
 }
 
 .checklist-list label {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px; /* Espaçamento reduzido */
     cursor: pointer;
+    font-size: 0.9em;
 }
 
 .checklist-list input[type="checkbox"] {
     accent-color: var(--primary-color);
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 /* Animações */
