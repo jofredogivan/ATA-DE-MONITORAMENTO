@@ -21,7 +21,6 @@
 <body>
 
 <div class="page capa" id="capa">
-    <img src="assets/image_a77742.png" alt="Japan Security Logo" class="logo-capa">
     <div class="info-capa">
         <h1 class="titulo-capa">ATA DE MONITORAMENTO ONLINE</h1>
         <h2 class="subtitulo-capa">PASSAGEM DE SERVIÇO</h2>
@@ -289,13 +288,13 @@
     async function gerarPdfFormal() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 15;
+        const textWidth = pageWidth - (margin * 2);
         let y = 30;
         const lineHeight = 7;
         const titleHeight = 8;
-        const margin = 15;
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const textWidth = pageWidth - (margin * 2);
 
         const loadImage = (path) => {
             return new Promise((resolve, reject) => {
@@ -309,17 +308,18 @@
             });
         };
 
-        const [logoImg, watermarkImg] = await Promise.all([
+        const [logoPDF, watermarkImg, oldCapaImg] = await Promise.all([
             loadImage('assets/logo_nova.png'),
-            loadImage('icon.png')
+            loadImage('icon.png'),
+            loadImage('assets/image_987e83.png') // Imagem de capa do PDF
         ]);
-        
+
         const addHeader = (doc) => {
-            if (logoImg) {
-                const logoAspectRatio = logoImg.width / logoImg.height;
+            if (logoPDF) {
+                const logoAspectRatio = logoPDF.width / logoPDF.height;
                 const newLogoWidth = 60;
                 const newLogoHeight = newLogoWidth / logoAspectRatio;
-                doc.addImage(logoImg, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
+                doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
             }
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
@@ -349,9 +349,6 @@
             }
         };
 
-        addHeader(doc);
-        addWatermark(doc);
-        
         const v = sel => document.querySelector(sel)?.value || "";
         const getLines = (text) => doc.splitTextToSize(text, textWidth);
 
@@ -375,7 +372,17 @@
             y += 4;
         };
 
-        // Conteúdo do PDF a partir dos campos do formulário
+        // --- Geração da CAPA do PDF (primeira página) ---
+        if (oldCapaImg) {
+            doc.addImage(oldCapaImg, 'PNG', 0, 0, pageWidth, pageHeight);
+            doc.addPage(); // Adiciona uma nova página para o conteúdo da ata
+            y = 30; // Reseta a posição Y para o novo conteúdo
+        }
+
+        // --- Geração do Conteúdo do PDF (a partir da segunda página) ---
+        addHeader(doc);
+        addWatermark(doc);
+        
         addSection("Informações do Plantão", `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`);
 
         let plantonistas = "";
