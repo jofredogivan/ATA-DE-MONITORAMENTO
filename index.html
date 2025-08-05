@@ -311,15 +311,15 @@
                 const logoAspectRatio = logoImg.width / logoImg.height;
                 const newLogoWidth = 60;
                 const newLogoHeight = newLogoWidth / logoAspectRatio;
-                // Ajustando a posição Y da logo para ficar alinhada com o texto
-                doc.addImage(logoImg, 'PNG', pageWidth - margin - newLogoWidth, 8, newLogoWidth, newLogoHeight);
+                // Ajustando a posição Y da logo para subir mais
+                doc.addImage(logoImg, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
             }
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
             // Posição Y do título
-            doc.text("Ata de Monitoramento Online", margin, 15);
+            doc.text("Ata de Monitoramento Online", margin, 12);
             // Linha abaixo do cabeçalho
-            doc.line(margin, 20, pageWidth - margin, 20);
+            doc.line(margin, 18, pageWidth - margin, 18);
         };
         
         const addWatermark = (doc) => {
