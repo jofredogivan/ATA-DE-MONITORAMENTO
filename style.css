@@ -13,7 +13,7 @@
     --shadow-dark: rgba(0, 0, 0, 0.3);
 }
 
-/* Estilo global e body */
+/* Estilo global e body - Centralizado e otimizado */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--background-dark);
@@ -22,7 +22,7 @@ body {
     padding: 0;
     line-height: 1.6;
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Centraliza horizontalmente */
     align-items: flex-start;
     min-height: 100vh;
     box-sizing: border-box;
@@ -31,11 +31,11 @@ body {
 .page {
     width: 100%;
     max-width: 800px;
-    padding: 10px; /* Espaçamento reduzido */
+    padding: 20px;
     box-sizing: border-box;
 }
 
-/* Estilização da capa */
+/* Estilização da capa - Centralizada */
 .capa {
     display: flex;
     flex-direction: column;
@@ -48,7 +48,7 @@ body {
 .logo-capa {
     width: 250px;
     height: auto;
-    margin-bottom: 20px; /* Espaçamento reduzido */
+    margin-bottom: 25px;
     animation: fadeIn 1.5s ease-in-out;
 }
 
@@ -56,7 +56,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-size: 2.5em;
     font-weight: 600;
-    margin-bottom: 30px; /* Espaçamento reduzido */
+    margin-bottom: 30px;
     color: var(--text-color);
     text-shadow: 2px 2px 4px var(--shadow-dark);
 }
@@ -66,24 +66,24 @@ h1 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     text-align: center;
-    margin-top: 20px; /* Espaçamento reduzido */
-    margin-bottom: 20px; /* Espaçamento reduzido */
+    margin-top: 30px;
+    margin-bottom: 25px;
 }
 
 h2 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
-    font-size: 1.1em; /* Tamanho da fonte um pouco menor */
+    font-size: 1.2em;
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: 5px;
-    margin-bottom: 10px; /* Espaçamento reduzido */
+    margin-bottom: 10px; /* Reduzido o espaçamento */
 }
 
 .form-page {
     display: none;
     transition: opacity 0.5s ease;
     opacity: 0;
-    padding-bottom: 20px;
+    padding-bottom: 40px;
 }
 
 .form-page.active {
@@ -93,35 +93,34 @@ h2 {
 
 .card {
     background-color: var(--card-background);
-    padding: 15px; /* Espaçamento interno reduzido */
-    margin-bottom: 15px; /* Espaçamento entre cards reduzido */
+    padding: 15px; /* Reduzido o espaçamento interno */
+    margin-bottom: 15px; /* Reduzido o espaçamento entre cards */
     border-radius: 12px;
     box-shadow: 0 4px 8px var(--shadow-dark);
     border: 1px solid var(--border-color);
 }
 
 .input-group {
-    margin-bottom: 10px; /* Espaçamento entre inputs reduzido */
+    margin-bottom: 10px; /* Reduzido o espaçamento entre inputs */
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 3px; /* Espaçamento reduzido */
+    margin-bottom: 5px;
     font-weight: 500;
     color: var(--text-color);
-    font-size: 0.9em; /* Tamanho da fonte um pouco menor */
 }
 
 .input-field,
 textarea.input-field,
 select.input-field {
     width: 100%;
-    padding: 10px; /* Espaçamento interno reduzido */
+    padding: 10px; /* Reduzido o espaçamento interno */
     border: 1px solid var(--border-color);
     background-color: #333;
     color: var(--text-color);
     border-radius: 8px;
-    font-size: 0.95em;
+    font-size: 1em; /* Tamanho da fonte original */
     box-sizing: border-box;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -133,16 +132,16 @@ select.input-field {
 }
 
 textarea.input-field {
-    min-height: 80px; /* Altura mínima reduzida */
+    min-height: 80px; /* Reduzido a altura mínima */
     resize: vertical;
 }
 
 .btn {
-    padding: 10px 20px; /* Espaçamento interno reduzido */
+    padding: 12px 25px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9em; /* Tamanho da fonte menor */
+    font-size: 1em;
     font-weight: 600;
     transition: transform 0.2s, background-color 0.2s;
     text-transform: uppercase;
@@ -164,7 +163,7 @@ textarea.input-field {
 .btn.secondary {
     background-color: var(--secondary-color);
     color: #fff;
-    margin-top: 10px; /* Espaçamento reduzido */
+    margin-top: 10px; /* Reduzido o espaçamento */
 }
 
 .btn.secondary:hover {
@@ -175,20 +174,20 @@ textarea.input-field {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px; /* Espaçamento reduzido */
+    margin-top: 15px; /* Reduzido o espaçamento */
 }
 
 .final-buttons {
     display: flex;
     justify-content: flex-end;
-    margin-top: 15px; /* Espaçamento reduzido */
+    margin-top: 15px; /* Reduzido o espaçamento */
 }
 
 /* Layout de colunas */
 .grid-2-cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px; /* Espaçamento entre colunas reduzido */
+    gap: 10px; /* Reduzido o espaçamento */
 }
 
 .full-width {
@@ -202,22 +201,23 @@ textarea.input-field {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px; /* Espaçamento entre itens reduzido */
+    gap: 8px; /* Reduzido o espaçamento */
+    justify-content: space-between; /* Alinha os itens para ocuparem o espaço */
 }
 
 .checklist-list li {
     background-color: #333;
     border-radius: 8px;
-    padding: 8px; /* Espaçamento interno reduzido */
-    flex: 1 1 180px; /* Largura mínima ajustada */
+    padding: 8px; /* Reduzido o espaçamento interno */
+    flex: 1 1 200px; /* Permite que os itens se ajustem, mas mantêm uma largura mínima */
 }
 
 .checklist-list label {
     display: flex;
     align-items: center;
-    gap: 8px; /* Espaçamento reduzido */
+    gap: 8px; /* Reduzido o espaçamento */
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 1em;
 }
 
 .checklist-list input[type="checkbox"] {
