@@ -287,6 +287,8 @@
 
 // ... (o resto do seu HTML permanece o mesmo) ...
 
+// ... (o resto do seu HTML permanece o mesmo) ...
+
 async function gerarPdfFormal() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
@@ -354,12 +356,11 @@ async function gerarPdfFormal() {
     };
 
     const v = sel => document.querySelector(sel)?.value || "";
-    const getLines = (text) => doc.splitTextToSize(text, textWidth);
-
-    // Função aprimorada para adicionar seções
+    
+    // Função aprimorada para adicionar seções com quebra de linha
     const addSection = (title, content) => {
         const contentFormatted = content.trim() ? content : "N/A";
-        const lines = getLines(contentFormatted);
+        const lines = doc.splitTextToSize(contentFormatted, textWidth);
         
         const requiredHeight = titleHeight + (lines.length * lineHeight) + lineHeight;
 
@@ -403,19 +404,19 @@ async function gerarPdfFormal() {
 
     let ocorrencias = "";
     document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
-        if (el.value) ocorrencias += `• ${el.value.replace(/\n/g, '')}\n`; // Adicionado replace para evitar quebras de linha duplas
+        if (el.value) ocorrencias += `• ${el.value}\n`;
     });
     addSection("Ocorrências", ocorrencias);
 
     let portaria = "";
     document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
-        if (el.value) portaria += `• ${el.value.replace(/\n/g, '')}\n`;
+        if (el.value) portaria += `• ${el.value}\n`;
     });
     addSection("Ocorrências de Portaria", portaria);
 
     let ordens = "";
     document.querySelectorAll('#ordens .ordem').forEach(el => {
-        if (el.value) ordens += `• ${el.value.replace(/\n/g, '')}\n`;
+        if (el.value) ordens += `• ${el.value}\n`;
     });
     addSection("Ordens de Serviço", ordens);
     
