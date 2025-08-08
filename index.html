@@ -207,8 +207,11 @@
         document.querySelectorAll('.form-page').forEach(page => {
             page.classList.remove('active');
         });
-        document.getElementById(`page-${pageNumber}`).classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const pageElement = document.getElementById(`page-${pageNumber}`);
+        if (pageElement) {
+            pageElement.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     }
 
     function nextPage() {
@@ -414,11 +417,9 @@
         });
         addSection("Ocorrências de Portaria", portaria);
         
-        // NOVO CAMPO ADICIONADO AQUI
         const elogiosReclamacoes = v('#elogiosReclamacoes');
         addSection("Elogios e Reclamações", elogiosReclamacoes);
-        // FIM DO NOVO CAMPO
-
+        
         let ordens = "";
         document.querySelectorAll('#ordens .ordem').forEach(el => {
             if (el.value) ordens += `• ${el.value}\n`;
