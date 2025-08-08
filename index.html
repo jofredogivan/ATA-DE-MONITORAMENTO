@@ -285,198 +285,205 @@
         document.getElementById('veiculos').appendChild(item);
     }
 
-    async function gerarPdfFormal() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 15;
-        const textWidth = pageWidth - (margin * 2);
-        let y = 30;
-        const lineHeight = 7;
-        const titleHeight = 8;
+async function gerarPdfFormal() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 15;
+    const textWidth = pageWidth - (margin * 2);
+    let y = 30; // Posição inicial Y para o conteúdo.
+    const lineHeight = 7;
+    const titleHeight = 8;
+    const headerHeight = 25; // Aumentei a altura para dar espaço ao logo e à linha
 
-        const loadImage = (path) => {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => resolve(img);
-                img.onerror = () => {
-                    console.warn(`Imagem não encontrada ou com erro: ${path}`);
-                    resolve(null);
-                };
-                img.src = path;
-            });
-        };
+    const loadImage = (path) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => {
+                console.warn(`Imagem não encontrada ou com erro: ${path}`);
+                resolve(null);
+            };
+            img.src = path;
+        });
+    };
 
-        const [logoPDF, watermarkImg, oldCapaImg] = await Promise.all([
-            loadImage('assets/logo_nova.png'),
-            loadImage('icon.png'),
-            loadImage('assets/image_987e83.png') // Imagem de capa do PDF
-        ]);
+    const [logoPDF, watermarkImg, oldCapaImg] = await Promise.all([
+        loadImage('assets/logo_nova.png'),
+        loadImage('icon.png'),
+        loadImage('assets/image_987e83.png') // Imagem de capa do PDF
+    ]);
 
-        const addHeader = (doc) => {
-            if (logoPDF) {
-                const logoAspectRatio = logoPDF.width / logoPDF.height;
-                const newLogoWidth = 60;
-                const newLogoHeight = newLogoWidth / logoAspectRatio;
-                doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
-            }
-            doc.setFont("Helvetica", "bold");
-            doc.setFontSize(10);
-            doc.text("Ata de Monitoramento Online", margin, 12);
-            doc.line(margin, 18, pageWidth - margin, 18);
-        };
-        
-        const addWatermark = (doc) => {
-            if (watermarkImg) {
-                doc.saveGraphicsState();
-                doc.setGState(new doc.GState({opacity: 0.1}));
-                const watermarkWidth = 150;
-                const watermarkHeight = 150;
-                const watermarkX = (pageWidth / 2) - (watermarkWidth / 2);
-                const watermarkY = (pageHeight / 2) - (watermarkHeight / 2);
-                doc.addImage(watermarkImg, 'PNG', watermarkX, watermarkY, watermarkWidth, watermarkHeight);
-                doc.restoreGraphicsState();
-            }
-        };
-
-        const checkNewPage = (requiredHeight) => {
-            if (y + requiredHeight > pageHeight - 20) {
-                doc.addPage();
-                y = 30;
-                addHeader(doc);
-                addWatermark(doc);
-            }
-        };
-
-        const v = sel => document.querySelector(sel)?.value || "";
-        const getLines = (text) => doc.splitTextToSize(text, textWidth);
-
-        const addSection = (title, content) => {
-            const contentFormatted = content.trim() ? content : "N/A";
-            const lines = getLines(contentFormatted);
-            const requiredHeight = titleHeight + (lines.length * lineHeight) + lineHeight;
-
-            checkNewPage(requiredHeight);
-
-            doc.setFont("Helvetica", "bold");
-            doc.setFontSize(14);
-            doc.text(title, margin, y);
-            y += titleHeight - 2;
-            doc.setFont("Helvetica", "normal");
-            doc.setFontSize(12);
-            lines.forEach(line => {
-                doc.text(line, margin, y);
-                y += lineHeight;
-            });
-            y += 4;
-        };
-
-        // --- Geração da CAPA do PDF (primeira página) ---
-        if (oldCapaImg) {
-            doc.addImage(oldCapaImg, 'PNG', 0, 0, pageWidth, pageHeight);
-            doc.addPage(); // Adiciona uma nova página para o conteúdo da ata
-            y = 30; // Reseta a posição Y para o novo conteúdo
+    const addHeader = (doc) => {
+        if (logoPDF) {
+            const logoAspectRatio = logoPDF.width / logoPDF.height;
+            const newLogoWidth = 60;
+            const newLogoHeight = newLogoWidth / logoAspectRatio;
+            // Ajuste a posição Y do logo para evitar sobreposição
+            doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
         }
-
-        // --- Geração do Conteúdo do PDF (a partir da segunda página) ---
-        addHeader(doc);
-        addWatermark(doc);
-        
-        addSection("Informações do Plantão", `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`);
-
-        let plantonistas = "";
-        document.querySelectorAll('#plantonistas .plantonista-item').forEach(item => {
-            const nome = item.querySelector('.nome')?.value;
-            const cargo = item.querySelector('.cargo')?.value;
-            if (nome) plantonistas += `• ${nome} - ${cargo || "Sem cargo"}\n`;
-        });
-        addSection("Plantonistas", plantonistas);
-
-        let ocorrencias = "";
-        document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
-            if (el.value) ocorrencias += `• ${el.value}\n`;
-        });
-        addSection("Ocorrências", ocorrencias);
-
-        let portaria = "";
-        document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
-            if (el.value) portaria += `• ${el.value}\n`;
-        });
-        addSection("Ocorrências de Portaria", portaria);
-
-        let ordens = "";
-        document.querySelectorAll('#ordens .ordem').forEach(el => {
-            if (el.value) ordens += `• ${el.value}\n`;
-        });
-        addSection("Ordens de Serviço", ordens);
-        
-        let viaturas = "";
-        document.querySelectorAll('#viaturas .viatura-item').forEach(item => {
-            const data = item.querySelector('.viatura-data').value;
-            const hora = item.querySelector('.viatura-hora').value;
-            const solicitante = item.querySelector('.viatura-solicitante').value;
-            const veiculo = item.querySelector('.viatura-veiculo').value;
-            const averiguador = item.querySelector('.viatura-averiguador').value;
-            const chegada = item.querySelector('.viatura-chegada').value;
-            const saida = item.querySelector('.viatura-saida').value;
-            if (data || solicitante) {
-                viaturas += `Data: ${data}, Hora: ${hora}\nSolicitante: ${solicitante}\nVeículo: ${veiculo}, Averiguador: ${averiguador}\nChegada: ${chegada}, Saída: ${saida}\n\n`;
-            }
-        });
-        addSection("Envio de Viatura", viaturas);
-
-        let veiculos = "";
-        document.querySelectorAll('#veiculos .veiculo-item').forEach(item => {
-            const data = item.querySelector('.veiculo-data').value;
-            const saida = item.querySelector('.veiculo-saida').value;
-            const chegada = item.querySelector('.veiculo-chegada').value;
-            const nome = item.querySelector('.veiculo-nome').value;
-            const condutor = item.querySelector('.veiculo-condutor').value;
-            if (data || nome) {
-                veiculos += `Data: ${data}\nSaída: ${saida}\nChegada: ${chegada}\nVeículo: ${nome}\nCondutor: ${condutor}\n\n`;
-            }
-        });
-        addSection("Controle de Veículos", veiculos);
-
-        const paradoxOnline = v('#paradoxOnline');
-        const paradoxOffline = v('#paradoxOffline');
-        let paradox = `${paradoxOnline || '0'} Online, ${paradoxOffline || '0'} Offline\nHorário: ${v('#paradoxHorario')}`;
-        addSection("Controle da Paradox", paradox);
-
-        let checklist = "";
-        document.querySelectorAll('#checklist li input[type="checkbox"]').forEach(checkbox => {
-            if (checkbox.checked) {
-                checklist += `• ${checkbox.parentNode.textContent.trim()}\n`;
-            }
-        });
-        addSection("Checklist", checklist);
-
-        let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}\nQuem Recebe: ${v('#assinaturaRecebe')}`;
-        addSection("Assinaturas", assinaturas);
-
-        const imgInput = document.getElementById("videoAlertaImagem");
-        if (imgInput.files.length > 0) {
-            const reader = new FileReader();
-            reader.readAsDataURL(imgInput.files[0]);
-            await new Promise(resolve => reader.onload = resolve);
-            
-            const imgData = reader.result;
-            const imgWidth = textWidth;
-            const imgHeight = 100;
-            const requiredHeight = titleHeight + 5 + imgHeight + lineHeight;
-            
-            checkNewPage(requiredHeight);
-
-            doc.setFont("Helvetica", "bold");
-            doc.setFontSize(14);
-            doc.text("Controle de Vídeo Alerta", margin, y);
-            y += titleHeight + 5;
-            
-            doc.addImage(imgData, 'JPEG', margin, y, imgWidth, imgHeight);
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("Ata de Monitoramento Online", margin, 12);
+        doc.line(margin, 18, pageWidth - margin, 18);
+    };
+    
+    const addWatermark = (doc) => {
+        if (watermarkImg) {
+            doc.saveGraphicsState();
+            doc.setGState(new doc.GState({opacity: 0.1}));
+            const watermarkWidth = 150;
+            const watermarkHeight = 150;
+            const watermarkX = (pageWidth / 2) - (watermarkWidth / 2);
+            const watermarkY = (pageHeight / 2) - (watermarkHeight / 2);
+            doc.addImage(watermarkImg, 'PNG', watermarkX, watermarkY, watermarkWidth, watermarkHeight);
+            doc.restoreGraphicsState();
         }
+    };
 
-        doc.save("ata_monitoramento_formal.pdf");
+    const checkNewPage = (requiredHeight) => {
+        if (y + requiredHeight > pageHeight - 20) {
+            doc.addPage();
+            y = headerHeight; // Inicia o novo conteúdo após o cabeçalho
+            addHeader(doc);
+            addWatermark(doc);
+        }
+    };
+
+    const v = sel => document.querySelector(sel)?.value || "";
+
+    // Função para adicionar seções com quebra de linha automática
+    const addSection = (title, content) => {
+        const contentFormatted = content.trim() ? content : "N/A";
+        // Usa splitTextToSize para quebrar o texto na margem correta
+        const lines = doc.splitTextToSize(contentFormatted, textWidth);
+        const requiredHeight = titleHeight + (lines.length * lineHeight) + lineHeight;
+
+        checkNewPage(requiredHeight);
+
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(title, margin, y);
+        y += titleHeight - 2;
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(12);
+        
+        lines.forEach(line => {
+            doc.text(line, margin, y);
+            y += lineHeight;
+        });
+        y += 4;
+    };
+
+    // --- Geração da CAPA do PDF (primeira página) ---
+    if (oldCapaImg) {
+        doc.addImage(oldCapaImg, 'PNG', 0, 0, pageWidth, pageHeight);
+        doc.addPage(); // Adiciona uma nova página para o conteúdo da ata
+        y = headerHeight; // Reseta a posição Y para o novo conteúdo, logo abaixo do cabeçalho
+    }
+
+    // --- Geração do Conteúdo do PDF (a partir da segunda página) ---
+    addHeader(doc);
+    addWatermark(doc);
+    
+    // A partir daqui, a função addSection já lida com a quebra de linha e o espaçamento
+    addSection("Informações do Plantão", `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`);
+
+    let plantonistas = "";
+    document.querySelectorAll('#plantonistas .plantonista-item').forEach(item => {
+        const nome = item.querySelector('.nome')?.value;
+        const cargo = item.querySelector('.cargo')?.value;
+        if (nome) plantonistas += `• ${nome} - ${cargo || "Sem cargo"}\n`;
+    });
+    addSection("Plantonistas", plantonistas);
+
+    let ocorrencias = "";
+    document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
+        if (el.value) ocorrencias += `• ${el.value}\n`;
+    });
+    addSection("Ocorrências", ocorrencias);
+
+    let portaria = "";
+    document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
+        if (el.value) portaria += `• ${el.value}\n`;
+    });
+    addSection("Ocorrências de Portaria", portaria);
+
+    let ordens = "";
+    document.querySelectorAll('#ordens .ordem').forEach(el => {
+        if (el.value) ordens += `• ${el.value}\n`;
+    });
+    addSection("Ordens de Serviço", ordens);
+    
+    let viaturas = "";
+    document.querySelectorAll('#viaturas .viatura-item').forEach(item => {
+        const data = item.querySelector('.viatura-data').value;
+        const hora = item.querySelector('.viatura-hora').value;
+        const solicitante = item.querySelector('.viatura-solicitante').value;
+        const veiculo = item.querySelector('.viatura-veiculo').value;
+        const averiguador = item.querySelector('.viatura-averiguador').value;
+        const chegada = item.querySelector('.viatura-chegada').value;
+        const saida = item.querySelector('.viatura-saida').value;
+        if (data || solicitante) {
+            viaturas += `Data: ${data}, Hora: ${hora}\nSolicitante: ${solicitante}\nVeículo: ${veiculo}, Averiguador: ${averiguador}\nChegada: ${chegada}, Saída: ${saida}\n\n`;
+        }
+    });
+    addSection("Envio de Viatura", viaturas);
+
+    let veiculos = "";
+    document.querySelectorAll('#veiculos .veiculo-item').forEach(item => {
+        const data = item.querySelector('.veiculo-data').value;
+        const saida = item.querySelector('.veiculo-saida').value;
+        const chegada = item.querySelector('.veiculo-chegada').value;
+        const nome = item.querySelector('.veiculo-nome').value;
+        const condutor = item.querySelector('.veiculo-condutor').value;
+        if (data || nome) {
+            veiculos += `Data: ${data}\nSaída: ${saida}\nChegada: ${chegada}\nVeículo: ${nome}\nCondutor: ${condutor}\n\n`;
+        }
+    });
+    addSection("Controle de Veículos", veiculos);
+
+    const paradoxOnline = v('#paradoxOnline');
+    const paradoxOffline = v('#paradoxOffline');
+    let paradox = `${paradoxOnline || '0'} Online, ${paradoxOffline || '0'} Offline\nHorário: ${v('#paradoxHorario')}`;
+    addSection("Controle da Paradox", paradox);
+
+    let checklist = "";
+    document.querySelectorAll('#checklist li input[type="checkbox"]').forEach(checkbox => {
+        if (checkbox.checked) {
+            checklist += `• ${checkbox.parentNode.textContent.trim()}\n`;
+        }
+    });
+    addSection("Checklist", checklist);
+
+    let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}\nQuem Recebe: ${v('#assinaturaRecebe')}`;
+    addSection("Assinaturas", assinaturas);
+
+    const imgInput = document.getElementById("videoAlertaImagem");
+    if (imgInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.readAsDataURL(imgInput.files[0]);
+        await new Promise(resolve => reader.onload = resolve);
+        
+        const imgData = reader.result;
+        const imgWidth = textWidth;
+        const imgHeight = 100;
+        const requiredHeight = titleHeight + 5 + imgHeight + lineHeight;
+        
+        checkNewPage(requiredHeight);
+
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Controle de Vídeo Alerta", margin, y);
+        y += titleHeight + 5;
+        
+        doc.addImage(imgData, 'JPEG', margin, y, imgWidth, imgHeight);
+        y += imgHeight + 10;
+    }
+
+    doc.save("ata_monitoramento_formal.pdf");
+    
     }
 
     if ('serviceWorker' in navigator) {
