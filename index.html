@@ -289,6 +289,8 @@
 
 // ... (o resto do seu HTML permanece o mesmo) ...
 
+// ... (o resto do seu HTML permanece o mesmo) ...
+
 async function gerarPdfFormal() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
@@ -404,19 +406,19 @@ async function gerarPdfFormal() {
 
     let ocorrencias = "";
     document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
-        if (el.value) ocorrencias += `• ${el.value}\n`;
+        if (el.value) ocorrencias += `• ${el.value.replace(/\n/g, '')}\n`;
     });
     addSection("Ocorrências", ocorrencias);
 
     let portaria = "";
     document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
-        if (el.value) portaria += `• ${el.value}\n`;
+        if (el.value) portaria += `• ${el.value.replace(/\n/g, '')}\n`;
     });
     addSection("Ocorrências de Portaria", portaria);
 
     let ordens = "";
     document.querySelectorAll('#ordens .ordem').forEach(el => {
-        if (el.value) ordens += `• ${el.value}\n`;
+        if (el.value) ordens += `• ${el.value.replace(/\n/g, '')}\n`;
     });
     addSection("Ordens de Serviço", ordens);
     
