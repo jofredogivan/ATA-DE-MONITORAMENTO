@@ -327,7 +327,7 @@ async function gerarPdfFormal() {
             const newLogoWidth = 60;
             const newLogoHeight = newLogoWidth / logoAspectRatio;
             // Posição do logo movida para baixo para não sobrepor o título e a linha
-            doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
+            doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 4, newLogoWidth, newLogoHeight);
         }
         doc.setFont("Helvetica", "bold");
         doc.setFontSize(10);
