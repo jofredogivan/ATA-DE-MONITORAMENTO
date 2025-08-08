@@ -330,8 +330,7 @@ async function gerarPdfFormal() {
             const logoAspectRatio = logoPDF.width / logoPDF.height;
             const newLogoWidth = 60;
             const newLogoHeight = newLogoWidth / logoAspectRatio;
-            // Posição do logo movida para baixo para não sobrepor o título e a linha
-            doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 4, newLogoWidth, newLogoHeight);
+            doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
         }
         doc.setFont("Helvetica", "bold");
         doc.setFontSize(10);
@@ -364,7 +363,6 @@ async function gerarPdfFormal() {
     const v = sel => document.querySelector(sel)?.value || "";
     const getLines = (text) => doc.splitTextToSize(text, textWidth);
 
-    // Função aprimorada para adicionar seções com quebra de linha
     const addSection = (title, content) => {
         const contentFormatted = content.trim() ? content : "N/A";
         const lines = getLines(contentFormatted);
@@ -398,7 +396,6 @@ async function gerarPdfFormal() {
     addHeader(doc);
     addWatermark(doc);
     
-    // As seções agora são chamadas com a função addSection otimizada
     addSection("Informações do Plantão", `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`);
 
     let plantonistas = "";
@@ -420,6 +417,11 @@ async function gerarPdfFormal() {
         if (el.value) portaria += `• ${el.value}\n`;
     });
     addSection("Ocorrências de Portaria", portaria);
+    
+    // NOVO CAMPO ADICIONADO AQUI
+    const elogiosReclamacoes = v('#elogiosReclamacoes');
+    addSection("Elogios e Reclamações", elogiosReclamacoes);
+    // FIM DO NOVO CAMPO
 
     let ordens = "";
     document.querySelectorAll('#ordens .ordem').forEach(el => {
