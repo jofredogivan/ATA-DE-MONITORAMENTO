@@ -298,10 +298,10 @@ async function gerarPdfFormal() {
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 15;
     const textWidth = pageWidth - (margin * 2);
-    let y = 30; // Posição inicial Y
+    let y = 35; // Aumentei o valor inicial de 'y' para garantir espaço para o cabeçalho
     const lineHeight = 7;
     const titleHeight = 8;
-    const headerHeight = 25; // Altura fixa para o cabeçalho
+    const headerHeight = 30; // Aumentei a altura fixa para o cabeçalho
 
     const loadImage = (path) => {
         return new Promise((resolve, reject) => {
@@ -326,13 +326,13 @@ async function gerarPdfFormal() {
             const logoAspectRatio = logoPDF.width / logoPDF.height;
             const newLogoWidth = 60;
             const newLogoHeight = newLogoWidth / logoAspectRatio;
-            // Posição do logo no canto superior direito, sem sobrepor a linha
+            // Posição do logo movida para baixo para não sobrepor o título e a linha
             doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
         }
         doc.setFont("Helvetica", "bold");
         doc.setFontSize(10);
         doc.text("Ata de Monitoramento Online", margin, 12);
-        doc.line(margin, 18, pageWidth - margin, 18);
+        doc.line(margin, 20, pageWidth - margin, 20); // Linha movida para baixo
     };
 
     const addWatermark = (doc) => {
@@ -358,11 +358,12 @@ async function gerarPdfFormal() {
     };
 
     const v = sel => document.querySelector(sel)?.value || "";
-    
+    const getLines = (text) => doc.splitTextToSize(text, textWidth);
+
     // Função aprimorada para adicionar seções com quebra de linha
     const addSection = (title, content) => {
         const contentFormatted = content.trim() ? content : "N/A";
-        const lines = doc.splitTextToSize(contentFormatted, textWidth);
+        const lines = getLines(contentFormatted);
         
         const requiredHeight = titleHeight + (lines.length * lineHeight) + lineHeight;
 
@@ -406,19 +407,19 @@ async function gerarPdfFormal() {
 
     let ocorrencias = "";
     document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
-        if (el.value) ocorrencias += `• ${el.value.replace(/\n/g, '')}\n`;
+        if (el.value) ocorrencias += `• ${el.value}\n`;
     });
     addSection("Ocorrências", ocorrencias);
 
     let portaria = "";
     document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
-        if (el.value) portaria += `• ${el.value.replace(/\n/g, '')}\n`;
+        if (el.value) portaria += `• ${el.value}\n`;
     });
     addSection("Ocorrências de Portaria", portaria);
 
     let ordens = "";
     document.querySelectorAll('#ordens .ordem').forEach(el => {
-        if (el.value) ordens += `• ${el.value.replace(/\n/g, '')}\n`;
+        if (el.value) ordens += `• ${el.value}\n`;
     });
     addSection("Ordens de Serviço", ordens);
     
@@ -490,6 +491,7 @@ async function gerarPdfFormal() {
 
     doc.save("ata_monitoramento_formal.pdf");
 }
+    
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('service-worker.js')
