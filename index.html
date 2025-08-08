@@ -285,6 +285,8 @@
         document.getElementById('veiculos').appendChild(item);
     }
 
+// ... (o resto do seu HTML permanece o mesmo) ...
+
 async function gerarPdfFormal() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
@@ -292,10 +294,10 @@ async function gerarPdfFormal() {
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 15;
     const textWidth = pageWidth - (margin * 2);
-    let y = 30; // Posição inicial Y para o conteúdo.
+    let y = 30; // Posição inicial Y
     const lineHeight = 7;
     const titleHeight = 8;
-    const headerHeight = 25; // Aumentei a altura para dar espaço ao logo e à linha
+    const headerHeight = 25; // Altura fixa para o cabeçalho
 
     const loadImage = (path) => {
         return new Promise((resolve, reject) => {
@@ -320,7 +322,7 @@ async function gerarPdfFormal() {
             const logoAspectRatio = logoPDF.width / logoPDF.height;
             const newLogoWidth = 60;
             const newLogoHeight = newLogoWidth / logoAspectRatio;
-            // Ajuste a posição Y do logo para evitar sobreposição
+            // Posição do logo no canto superior direito, sem sobrepor a linha
             doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
         }
         doc.setFont("Helvetica", "bold");
@@ -328,7 +330,7 @@ async function gerarPdfFormal() {
         doc.text("Ata de Monitoramento Online", margin, 12);
         doc.line(margin, 18, pageWidth - margin, 18);
     };
-    
+
     const addWatermark = (doc) => {
         if (watermarkImg) {
             doc.saveGraphicsState();
@@ -352,12 +354,13 @@ async function gerarPdfFormal() {
     };
 
     const v = sel => document.querySelector(sel)?.value || "";
+    const getLines = (text) => doc.splitTextToSize(text, textWidth);
 
-    // Função para adicionar seções com quebra de linha automática
+    // Função aprimorada para adicionar seções
     const addSection = (title, content) => {
         const contentFormatted = content.trim() ? content : "N/A";
-        // Usa splitTextToSize para quebrar o texto na margem correta
-        const lines = doc.splitTextToSize(contentFormatted, textWidth);
+        const lines = getLines(contentFormatted);
+        
         const requiredHeight = titleHeight + (lines.length * lineHeight) + lineHeight;
 
         checkNewPage(requiredHeight);
@@ -379,15 +382,15 @@ async function gerarPdfFormal() {
     // --- Geração da CAPA do PDF (primeira página) ---
     if (oldCapaImg) {
         doc.addImage(oldCapaImg, 'PNG', 0, 0, pageWidth, pageHeight);
-        doc.addPage(); // Adiciona uma nova página para o conteúdo da ata
-        y = headerHeight; // Reseta a posição Y para o novo conteúdo, logo abaixo do cabeçalho
+        doc.addPage();
+        y = headerHeight;
     }
 
     // --- Geração do Conteúdo do PDF (a partir da segunda página) ---
     addHeader(doc);
     addWatermark(doc);
     
-    // A partir daqui, a função addSection já lida com a quebra de linha e o espaçamento
+    // As seções agora são chamadas com a função addSection otimizada
     addSection("Informações do Plantão", `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`);
 
     let plantonistas = "";
@@ -400,19 +403,19 @@ async function gerarPdfFormal() {
 
     let ocorrencias = "";
     document.querySelectorAll('#ocorrencias .ocorrencia').forEach(el => {
-        if (el.value) ocorrencias += `• ${el.value}\n`;
+        if (el.value) ocorrencias += `• ${el.value.replace(/\n/g, '')}\n`; // Adicionado replace para evitar quebras de linha duplas
     });
     addSection("Ocorrências", ocorrencias);
 
     let portaria = "";
     document.querySelectorAll('#ocorrenciasPortaria .portaria').forEach(el => {
-        if (el.value) portaria += `• ${el.value}\n`;
+        if (el.value) portaria += `• ${el.value.replace(/\n/g, '')}\n`;
     });
     addSection("Ocorrências de Portaria", portaria);
 
     let ordens = "";
     document.querySelectorAll('#ordens .ordem').forEach(el => {
-        if (el.value) ordens += `• ${el.value}\n`;
+        if (el.value) ordens += `• ${el.value.replace(/\n/g, '')}\n`;
     });
     addSection("Ordens de Serviço", ordens);
     
@@ -483,9 +486,7 @@ async function gerarPdfFormal() {
     }
 
     doc.save("ata_monitoramento_formal.pdf");
-    
-    }
-
+}
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('service-worker.js')
