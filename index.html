@@ -301,10 +301,10 @@
         const pageHeight = doc.internal.pageSize.getHeight();
         const margin = 15;
         const textWidth = pageWidth - (margin * 2);
-        let y = 35; // Aumentei o valor inicial de 'y' para garantir espaço para o cabeçalho
+        let y = 35; 
         const lineHeight = 7;
         const titleHeight = 8;
-        const headerHeight = 30; // Aumentei a altura fixa para o cabeçalho
+        const headerHeight = 30; 
 
         const loadImage = (path) => {
             return new Promise((resolve, reject) => {
@@ -318,10 +318,11 @@
             });
         };
 
+        // Caminhos de imagem atualizados com base no seu CSS
         const [logoPDF, watermarkImg, oldCapaImg] = await Promise.all([
             loadImage('assets/logo_nova.png'),
             loadImage('icon.png'),
-            loadImage('assets/image_987e83.png') // Imagem de capa do PDF
+            loadImage('assets/image_a77742.png')
         ]);
 
         const addHeader = (doc) => {
@@ -334,7 +335,7 @@
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
             doc.text("Ata de Monitoramento Online", margin, 12);
-            doc.line(margin, 20, pageWidth - margin, 20); // Linha movida para baixo
+            doc.line(margin, 20, pageWidth - margin, 20); 
         };
 
         const addWatermark = (doc) => {
@@ -353,7 +354,7 @@
         const checkNewPage = (requiredHeight) => {
             if (y + requiredHeight > pageHeight - 20) {
                 doc.addPage();
-                y = headerHeight; // Inicia o novo conteúdo após o cabeçalho
+                y = headerHeight; 
                 addHeader(doc);
                 addWatermark(doc);
             }
