@@ -330,7 +330,7 @@
                 const logoAspectRatio = logoPDF.width / logoPDF.height;
                 const newLogoWidth = 60;
                 const newLogoHeight = newLogoWidth / logoAspectRatio;
-                doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
+                doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 5, newLogoWidth, newLogoHeight);
             }
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
