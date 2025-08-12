@@ -318,10 +318,11 @@
             });
         };
 
-        const [logoPDF, watermarkImg, oldCapaImg] = await Promise.all([
+        // --- IMAGEM DA CAPA DO PDF CORRIGIDA ---
+        const [logoPDF, watermarkImg, pdfCapaImg] = await Promise.all([
             loadImage('assets/logo_nova.png'),
             loadImage('icon.png'),
-            loadImage('assets/image_a77742.png')
+            loadImage('assets/image_987e83.png') 
         ]);
 
         const addHeader = (doc) => {
@@ -385,8 +386,8 @@
         };
 
         // --- Geração da CAPA do PDF (primeira página) ---
-        if (oldCapaImg) {
-            doc.addImage(oldCapaImg, 'PNG', 0, 0, pageWidth, pageHeight);
+        if (pdfCapaImg) {
+            doc.addImage(pdfCapaImg, 'PNG', 0, 0, pageWidth, pageHeight);
             doc.addPage();
             y = headerHeight;
         }
