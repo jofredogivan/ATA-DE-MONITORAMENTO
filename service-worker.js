@@ -1,63 +1,70 @@
-const cacheName = 'ata-pwa-v2.0.2'; // Mude a versão aqui para forçar uma atualização
-const filesToCache = [
+// Altere este número a cada nova atualização para forçar o navegador a baixar os novos arquivos.
+const CACHE_NAME = 'ata-monitoramento-v1.1'; 
+const urlsToCache = [
     '/',
-    'index.html',
-    'style.css',
-    'manifest.json',
-    'imagem_57099f.png',
-    'assets/logo_nova.png',
-    'assets/image_a77742.png',
-    'assets/image_987e83.png',
-    'icon.png',
+    '/index.html',
+    '/style.css',
+    '/manifest.json',
+    '/icon.png',
     'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
     'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Roboto:wght@400;500&display=swap'
 ];
 
-self.addEventListener('install', (event) => {
-    console.log('[Service Worker] Instalando...');
+self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(cacheName).then((cache) => {
-            console.log('[Service Worker] Cacheando todos os arquivos');
-            return cache.addAll(filesToCache).catch(err => {
-                console.error('Falha ao cachear arquivos:', err);
-            });
-        }).then(() => {
-            self.skipWaiting();
+        caches.open(CACHE_NAME)
+        .then(cache => {
+            console.log('Cache pre-populado');
+            return cache.addAll(urlsToCache);
         })
     );
 });
 
-self.addEventListener('activate', (event) => {
-    console.log('[Service Worker] Ativando...');
-    event.waitUntil(
-        caches.keys().then((keyList) => {
-            return Promise.all(keyList.map((key) => {
-                if (key !== cacheName) {
-                    console.log('[Service Worker] Removendo cache antigo:', key);
-                    return caches.delete(key);
-                }
-            }));
-        })
-    );
-    return self.clients.claim();
-});
-
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request).then((response) => {
+        caches.match(event.request)
+        .then(response => {
+            // Retorna o arquivo do cache se ele existir
             if (response) {
                 return response;
             }
-            
-            return fetch(event.request).then((networkResponse) => {
-                return caches.open(cacheName).then((cache) => {
-                    cache.put(event.request, networkResponse.clone());
-                    return networkResponse;
-                });
-            }).catch(() => {
-                // Aqui você pode retornar uma página offline, se houver
-                // return caches.match('offline.html');
-            });
+
+            // Clona a requisição para que ela possa ser usada novamente
+            const fetchRequest = event.request.clone();
+
+            return fetch(fetchRequest).then(
+                response => {
+                    // Checa se a resposta é válida
+                    if (!response || response.status !== 200 || response.type !== 'basic') {
+                        return response;
+                    }
+
+                    // Clona a resposta para que o cache possa consumi-la
+                    const responseToCache = response.clone();
+
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            cache.put(event.request, responseToCache);
+                        });
+
+                    return response;
+                }
+            );
+        })
+    );
+});
+
+self.addEventListener('activate', event => {
+    const cacheWhitelist = [CACHE_NAME];
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
         })
     );
 });
