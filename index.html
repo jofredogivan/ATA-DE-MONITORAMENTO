@@ -26,7 +26,7 @@
         <h2 class="subtitulo-capa">PASSAGEM DE SERVIÇO</h2>
         <p class="texto-capa">Neste documento estão registrados todos os procedimentos adotados por este plantão, seja em verificação do vídeo alerta, contatos e observações de clientes, reclamações, ordens de serviços que foram abertas de alarmes, CFTV, portarias, envios de viaturas, ocorrências e verificação do sigma (web alarme, processador, receptora e rastreador).</p>
         <p class="data-capa">Desenvolvido para: **Japan Security / Monitoramento**</p>
-        <p class="data-capa">Data: 29 de julho de 2025</p>
+        <p class="data-capa">Data: 30 de julho de 2025</p>
     </div>
     <div class="center">
         <button class="btn primary" onclick="iniciarAta()">Iniciar Ata</button>
@@ -49,6 +49,10 @@
                         <option>07:00 às 19:00</option>
                         <option>19:00 às 07:00</option>
                     </select>
+                </div>
+                <div class="input-group">
+                    <label for="quemEntrega">Quem Entrega o Plantão</label>
+                    <input id="quemEntrega" type="text" placeholder="Nome de quem entregou o plantão" class="input-field">
                 </div>
             </section>
             <section class="card">
@@ -141,7 +145,25 @@
 
         <div class="form-page" id="page-4">
             <section class="card">
+                <h2>Controle de Diagnóstico dos Rastreadores</h2>
+                <div id="rastreadores">
+                    <div class="rastreador-item">
+                        <div class="grid-2-cols">
+                            <div class="input-group"><label>Cliente</label><input class="rastreador-cliente input-field" placeholder="Cliente"></div>
+                            <div class="input-group"><label>Veículo</label><input class="rastreador-veiculo input-field" placeholder="Veículo"></div>
+                            <div class="input-group"><label>Placa</label><input class="rastreador-placa input-field" placeholder="Placa"></div>
+                            <div class="input-group"><label>Última Recepção (Data/Hora)</label><input class="rastreador-ultima-recepcao input-field" type="datetime-local"></div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn secondary" onclick="adicionarRastreador()">+ Adicionar Rastreador</button>
+            </section>
+            <section class="card">
                 <h2>Controle de Vídeo Alerta</h2>
+                <div class="input-group">
+                    <label for="videoAlertaDownload">Download Buscado no PC (Data/Hora)</label>
+                    <input type="datetime-local" id="videoAlertaDownload" class="input-field">
+                </div>
                 <input type="file" id="videoAlertaImagem" accept="image/*" class="input-file">
             </section>
             <section class="card">
@@ -154,7 +176,7 @@
             </section>
             <section class="card">
                 <h2>Checklist</h2>
-                <ul id="checklist" class="checklist-list">
+                <ul id="checklist" class="checklist-list de Material/Portaria">
                     <li><label><input type="checkbox" checked> 04 Ramais</label></li>
                     <li><label><input type="checkbox" checked> 04 Controle de TV</label></li>
                     <li><label><input type="checkbox" checked> 01 Controle de Ar</label></li>
@@ -294,6 +316,20 @@
         document.getElementById('veiculos').appendChild(item);
     }
 
+    function adicionarRastreador() {
+        const item = document.createElement('div');
+        item.className = 'rastreador-item';
+        item.innerHTML = `
+            <div class="grid-2-cols">
+                <div class="input-group"><label>Cliente</label><input class="rastreador-cliente input-field" placeholder="Cliente"></div>
+                <div class="input-group"><label>Veículo</label><input class="rastreador-veiculo input-field" placeholder="Veículo"></div>
+                <div class="input-group"><label>Placa</label><input class="rastreador-placa input-field" placeholder="Placa"></div>
+                <div class="input-group"><label>Última Recepção (Data/Hora)</label><input class="rastreador-ultima-recepcao input-field" type="datetime-local"></div>
+            </div>
+        `;
+        document.getElementById('rastreadores').appendChild(item);
+    }
+
     async function gerarPdfFormal() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('p', 'mm', 'a4');
@@ -318,7 +354,6 @@
             });
         };
 
-        // --- IMAGEM DA CAPA DO PDF CORRIGIDA ---
         const [logoPDF, watermarkImg, pdfCapaImg] = await Promise.all([
             loadImage('assets/logo_nova.png'),
             loadImage('icon.png'),
@@ -330,7 +365,7 @@
                 const logoAspectRatio = logoPDF.width / logoPDF.height;
                 const newLogoWidth = 60;
                 const newLogoHeight = newLogoWidth / logoAspectRatio;
-                doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 5, newLogoWidth, newLogoHeight);
+                doc.addImage(logoPDF, 'PNG', pageWidth - margin - newLogoWidth, 6, newLogoWidth, newLogoHeight);
             }
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
@@ -396,7 +431,7 @@
         addHeader(doc);
         addWatermark(doc);
         
-        addSection("Informações do Plantão", `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}`);
+        addSection("Informações do Plantão", `Data: ${v('#dataPlantao')}\nHorário: ${v('#horario')}\nQuem Entrega: ${v('#quemEntrega')}`);
 
         let plantonistas = "";
         document.querySelectorAll('#plantonistas .plantonista-item').forEach(item => {
@@ -455,21 +490,27 @@
         });
         addSection("Controle de Veículos", veiculos);
 
+        // --- NOVA SEÇÃO DE RASTREADORES ---
+        let rastreadoresInfo = "";
+        document.querySelectorAll('#rastreadores .rastreador-item').forEach(item => {
+            const cliente = item.querySelector('.rastreador-cliente').value;
+            const veiculo = item.querySelector('.rastreador-veiculo').value;
+            const placa = item.querySelector('.rastreador-placa').value;
+            const ultimaRecepcao = item.querySelector('.rastreador-ultima-recepcao').value;
+            if (cliente || veiculo || placa || ultimaRecepcao) {
+                rastreadoresInfo += `Cliente: ${cliente}, Veículo: ${veiculo}, Placa: ${placa}, Última Recepção: ${ultimaRecepcao}\n`;
+            }
+        });
+        addSection("Controle de Diagnóstico dos Rastreadores", rastreadoresInfo);
+
         const paradoxOnline = v('#paradoxOnline');
         const paradoxOffline = v('#paradoxOffline');
         let paradox = `${paradoxOnline || '0'} Online, ${paradoxOffline || '0'} Offline\nHorário: ${v('#paradoxHorario')}`;
         addSection("Controle da Paradox", paradox);
 
-        let checklist = "";
-        document.querySelectorAll('#checklist li input[type="checkbox"]').forEach(checkbox => {
-            if (checkbox.checked) {
-                checklist += `• ${checkbox.parentNode.textContent.trim()}\n`;
-            }
-        });
-        addSection("Checklist", checklist);
-
-        let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}\nQuem Recebe: ${v('#assinaturaRecebe')}`;
-        addSection("Assinaturas", assinaturas);
+        // --- SEÇÃO DE VÍDEO ALERTA E IMAGEM (POSIÇÃO CORRIGIDA) ---
+        const videoAlertaDownload = v('#videoAlertaDownload');
+        addSection("Controle de Vídeo Alerta", `Download Buscado no PC (Data/Hora): ${videoAlertaDownload}`);
 
         const imgInput = document.getElementById("videoAlertaImagem");
         if (imgInput.files.length > 0) {
@@ -486,12 +527,23 @@
 
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(14);
-            doc.text("Controle de Vídeo Alerta", margin, y);
+            doc.text("Imagem de Vídeo Alerta", margin, y);
             y += titleHeight + 5;
             
             doc.addImage(imgData, 'JPEG', margin, y, imgWidth, imgHeight);
             y += imgHeight + 10;
         }
+
+        let checklist = "";
+        document.querySelectorAll('#checklist li input[type="checkbox"]').forEach(checkbox => {
+            if (checkbox.checked) {
+                checklist += `• ${checkbox.parentNode.textContent.trim()}\n`;
+            }
+        });
+        addSection("Checklist", checklist);
+
+        let assinaturas = `Quem Passa: ${v('#assinaturaPassa')}\nQuem Recebe: ${v('#assinaturaRecebe')}`;
+        addSection("Assinaturas", assinaturas);
 
         doc.save("ata_monitoramento_formal.pdf");
     }
